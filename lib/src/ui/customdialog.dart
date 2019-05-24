@@ -15,22 +15,20 @@ class CustomDialog extends StatefulWidget {
 class _CustomDialogState extends State<CustomDialog> {
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: 40
       ),
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      child: dialogContent(context),
+      child: Container(
+        margin: EdgeInsets.all(30),
+        color: Colors.transparent,
+        child: dialogContent(context),
+      ),
     );
   }
 
   dialogContent(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: 470,
-      ),
-      child: Card(
+    return  Card(
         elevation: 6,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -54,15 +52,14 @@ class _CustomDialogState extends State<CustomDialog> {
             // ),
           ],
         ),
-      ),
     );
   }
 
   Widget buildTitle() {
     //TODO check overflow
     String trunc(String text) {
-      if (text.length > 29) {
-        text = text.substring(0, 27) + '...';
+      if (text.length > 35) {
+        text = text.substring(0, 34) + '...';
       }
       return text;
     }

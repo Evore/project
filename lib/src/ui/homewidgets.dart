@@ -7,6 +7,7 @@ import '../data/semesterdata.dart';
 import '../data/subjectdata.dart';
 import 'next.dart';
 import 'customdialog.dart';
+import 'overlayexample.dart';
 
 class SemesterWidget extends StatefulWidget {
   @override
@@ -176,9 +177,7 @@ class _SubjectWidgetState extends State<SubjectWidget> {
           //             )));
           showDialog(
             context: context,
-            builder: (BuildContext context) => CustomDialog(
-                  subject: data,
-                ),
+            builder: (BuildContext context) => OverlayExample()
           );
         },
         child: Column(
