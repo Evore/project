@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../data/semesterdata.dart';
-import '../data/subjectdata.dart';
+import '../models/semesterdata.dart';
+import '../models/subjectdata.dart';
 import 'next.dart';
 import 'customdialog.dart';
 

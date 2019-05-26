@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'next.dart';
-import '../data/subjectdata.dart';
+import '../models/subjectdata.dart';
 
 class CustomDialog extends StatefulWidget {
   CustomDialog({this.subject});

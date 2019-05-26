@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'tab.dart' as t1;
 
-import '../data/record.dart';
+import '../models/record.dart';
 
 class Item extends StatefulWidget {
   Item({this.path});

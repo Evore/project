@@ -2,7 +2,7 @@ library home;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../data/subjectdata.dart';
+import '../models/subjectdata.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'tab.dart' as l1;
