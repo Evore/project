@@ -30,7 +30,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 0, backgroundColor: Colors.blue.shade600,),
+      // appBar: AppBar(elevation: 3, backgroundColor: Colors.blue.shade600,
+      // title: Text('Project Name'),),
       body: _buildBody(context),
     );
   }

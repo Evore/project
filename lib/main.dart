@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
     checkIfSignedIn();
     // _auth.signOut();
     //TODO: change the navigator method to pushReplacement
-    Navigator.push(
+    Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => isSignedIn ? Home() : LoginPage()));

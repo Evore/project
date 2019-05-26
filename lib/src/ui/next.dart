@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../data/subjectdata.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'grid.dart' as l1;
+import 'tab.dart' as l1;
 
 class Item extends StatefulWidget {
   Item({this.subject});
@@ -186,7 +186,8 @@ class _ItemState extends State<Item> {
     // index++;
     return RaisedButton(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      color: Color(0xff11cc99),
+      // color: Color(0xff11cc99),
+      color: Colors.blue[400],
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(5))),
       child: ConstrainedBox(
@@ -222,7 +223,7 @@ class _ItemState extends State<Item> {
       ),
       onPressed: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => l1.Item()));
+            context, MaterialPageRoute(builder: (context) => l1.ContentTabs()));
       },
     );
   }

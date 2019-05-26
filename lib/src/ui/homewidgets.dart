@@ -7,7 +7,6 @@ import '../data/semesterdata.dart';
 import '../data/subjectdata.dart';
 import 'next.dart';
 import 'customdialog.dart';
-import 'overlayexample.dart';
 
 class SemesterWidget extends StatefulWidget {
   @override
@@ -43,8 +42,8 @@ class _SemesterWidgetState extends State<SemesterWidget> {
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
-              colors: [Colors.blue.shade800, Colors.blue.shade700],
-              stops: [0.1, 0.6])),
+              colors: [Colors.blue.shade500, Colors.red.shade300],
+              stops: [0.4, 1])),
       child: Stack(
         children: <Widget>[
           ListView(
@@ -177,7 +176,9 @@ class _SubjectWidgetState extends State<SubjectWidget> {
           //             )));
           showDialog(
             context: context,
-            builder: (BuildContext context) => OverlayExample()
+            builder: (BuildContext context) => CustomDialog(
+              subject: data,
+            )
           );
         },
         child: Column(
