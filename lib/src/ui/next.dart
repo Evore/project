@@ -1,6 +1,7 @@
 library home;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../models/subjectdata.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -20,11 +21,14 @@ class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: <Widget>[_buildBody(context), custAppBar()],
+      appBar: AppBar(
+        title: Text('Learn'),
+        backgroundColor: Colors.white,
+        elevation: 1,
       ),
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.grey[100],
+      body: _buildBody(context),
     );
   }
 
@@ -117,16 +121,10 @@ class _ItemState extends State<Item> {
       shrinkWrap: true,
       itemCount: 10,
       itemBuilder: (BuildContext context, int index) {
-        if (index > 0) return makeCard(index);
-        return topContent(context, record.name);
+        return makeCard(index);
       },
     );
   }
-
-  Decoration decoration = BoxDecoration(
-      gradient: LinearGradient(
-          colors: [Colors.blue.shade700, Colors.red.shade300],
-          stops: [0.2, 1]));
 
   Widget topContent(BuildContext context, String name) {
     var width = MediaQuery.of(context).size.width;
@@ -183,48 +181,62 @@ class _ItemState extends State<Item> {
   }
 
   Widget myListTile(int index) {
-    // index++;
-    return RaisedButton(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      // color: Color(0xff11cc99),
-      color: Colors.blue[400],
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: 70),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Container(
-            width: 200,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  '$index. TAGS AND ATTRIBUTES ',
-                  style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Supporting Text',
-                  style: TextStyle(fontSize: 12, color: Colors.white),
-                ),
-                SizedBox(height: 10),
-                iconBar()
-              ],
-            ),
-          ),
-          Container(
-              height: 60, width: 60, child: Image.asset('assets/computer.png'))
-        ]),
+    index++;
+    return Container(decoration: BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(5)),
+        border: Border.all(
+          color: Color(0xFF64A5F6),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(color: Colors.grey[200])
+        ],
+        
       ),
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => l1.ContentTabs()));
-      },
+      child: RaisedButton(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        elevation: 0,
+        color: Colors.grey[100],
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        child: Container(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 65),
+            child:
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Container(
+                width: 205,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '$index. TAGS AND ATTRIBUTES ',
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[800],
+                          fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Supporting Text',
+                      style: TextStyle(fontSize: 12, color: Colors.grey[800]),
+                    ),
+                    SizedBox(height: 10),
+                    // iconBar()
+                  ],
+                ),
+              ),
+              Container(
+                  height: 50, width: 50, child: Image.asset('assets/computer.png'))
+            ]),
+          ),
+        ),
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => l1.ContentTabs()));
+        },
+      ),
     );
   }
 
