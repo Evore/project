@@ -24,9 +24,9 @@ class _ContentTabsState extends State<ContentTabs> {
           elevation: 1,
           bottom: TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.directions_car)),
-              Tab(icon: Icon(Icons.directions_transit)),
-              Tab(icon: Icon(Icons.directions_bike)),
+              Tab(icon: Icon(Icons.book)),
+              Tab(icon: Icon(Icons.book)),
+              Tab(icon: Icon(Icons.book)),
             ],
           ),
         ),

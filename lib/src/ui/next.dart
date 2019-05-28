@@ -175,9 +175,9 @@ class _ItemState extends State<Item> {
         boxShadow: [
           BoxShadow(
               color: Colors.grey[300],
-              blurRadius: 1,
-              spreadRadius: 1,
-              offset: Offset(0.0, 0))
+              blurRadius: 3,
+              spreadRadius: 2,
+              offset: Offset(0.0, 2))
         ],
       ),
       child: myListTile(name),
@@ -187,7 +187,7 @@ class _ItemState extends State<Item> {
   Widget myListTile(name) {
     return RaisedButton(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      elevation: 10,
+      elevation: 0,
       color: Colors.grey[50],
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(5))),
