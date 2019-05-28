@@ -7,6 +7,7 @@ import '../models/subjectdata.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'tab.dart' as l1;
+import '../models/record.dart';
 
 class Item extends StatefulWidget {
   Item({this.subject});
@@ -22,6 +23,14 @@ class _ItemState extends State<Item> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.blueGrey[800],
+          size: 1
+        ),
+        textTheme: TextTheme(
+          title: TextStyle(color: Colors.grey)
+        ),
+        centerTitle: true,
         title: Text('Learn'),
         backgroundColor: Colors.white,
         elevation: 1,
@@ -85,12 +94,11 @@ class _ItemState extends State<Item> {
   }
 
   Widget _buildBody(BuildContext context) {
+    DocumentReference ref = widget.subject.reference;
+    print("REFERENCE " + ref.documentID);
     // get actual snapshot from Cloud Firestore
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
-          .collection("course")
-          .where("name", isEqualTo: widget.subject.name)
-          .snapshots(),
+      stream: ref.collection("submodules").snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
@@ -105,25 +113,17 @@ class _ItemState extends State<Item> {
 
   Widget _buildItemPage(
       BuildContext context, List<DocumentSnapshot> snapshots) {
-    DocumentSnapshot data;
-    //Todo: fix this. Handle null data
-    if(snapshots.isEmpty){}
-    else data = snapshots[0];
 
-    final record = Record.fromSnapshot(data);
-    if (record.name == null) return Container();
-    return makeBody(context, record);
+    return snapshots.isEmpty ?
+        Center(child: Text('Nothing here')) 
+        : ListView(
+          children: snapshots.map((data) => makeBody(context, data)).toList(),
+        );
   }
 
-  Widget makeBody(BuildContext context, Record record) {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: 10,
-      itemBuilder: (BuildContext context, int index) {
-        return makeCard(index);
-      },
-    );
+  Widget makeBody(BuildContext context, DocumentSnapshot data) {
+    Record record = Record.fromSnapshot(data);
+    return makeCard(record.name);
   }
 
   Widget topContent(BuildContext context, String name) {
@@ -163,80 +163,68 @@ class _ItemState extends State<Item> {
     );
   }
 
-  Widget makeCard(int index) {
+  Widget makeCard(String name) {
     return Container(
       margin: new EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          boxShadow: [
-            BoxShadow(
-                color: Color(0x00000000),
-                blurRadius: 2,
-                spreadRadius: 1,
-                offset: Offset(0.0, 1))
-          ]),
-      child: myListTile(index),
-    );
-  }
-
-  Widget myListTile(int index) {
-    index++;
-    return Container(decoration: BoxDecoration(
-      borderRadius: BorderRadius.all(Radius.circular(5)),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
         border: Border.all(
           color: Color(0xFF64A5F6),
           width: 1,
         ),
         boxShadow: [
-          BoxShadow(color: Colors.grey[200])
+          BoxShadow(
+              color: Colors.grey[300],
+              blurRadius: 1,
+              spreadRadius: 1,
+              offset: Offset(0.0, 0))
         ],
-        
       ),
-      child: RaisedButton(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        elevation: 0,
-        color: Colors.grey[100],
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(5))),
-        child: Container(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: 65),
-            child:
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Container(
-                width: 205,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '$index. TAGS AND ATTRIBUTES ',
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey[800],
-                          fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Supporting Text',
-                      style: TextStyle(fontSize: 12, color: Colors.grey[800]),
-                    ),
-                    SizedBox(height: 10),
-                    // iconBar()
-                  ],
-                ),
+      child: myListTile(name),
+    );
+  }
+
+  Widget myListTile(name) {
+    return RaisedButton(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      elevation: 10,
+      color: Colors.grey[50],
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(5))),
+      child: Container(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: 65),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Container(
+              width: 205,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '$name',
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[800],
+                        fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(height: 10),
+                  // iconBar()
+                ],
               ),
-              Container(
-                  height: 50, width: 50, child: Image.asset('assets/computer.png'))
-            ]),
-          ),
+            ),
+            Container(
+                height: 50,
+                width: 50,
+                child: Image.asset('assets/computer.png'))
+          ]),
         ),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => l1.ContentTabs()));
-        },
       ),
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => l1.ContentTabs()));
+      },
     );
   }
 
@@ -253,18 +241,4 @@ class _ItemState extends State<Item> {
       ],
     );
   }
-}
-
-class Record {
-  final String name;
-  final DocumentReference reference;
-
-  Record.fromMap(Map<String, dynamic> map, {this.reference})
-      : name = map['name'];
-
-  Record.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
-
-  @override
-  String toString() => "Record<$name:";
 }

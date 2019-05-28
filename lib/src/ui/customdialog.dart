@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'next.dart';
 import '../models/subjectdata.dart';
+import '../models/record.dart';
 
 class CustomDialog extends StatefulWidget {
   CustomDialog({this.subject});
@@ -85,13 +86,13 @@ class _CustomDialogState extends State<CustomDialog> {
 
   Widget getParent(BuildContext context) {
     // String path = "course/" + widget.subject.courseId + "lessons";
-    String course_id = widget.subject.courseId;
+    String courseId = widget.subject.courseId;
 
     // get actual snapshot from Cloud Firestore
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
           .collection("course")
-          .where("courseId", isEqualTo: course_id)
+          .where("courseId", isEqualTo: courseId)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('${snapshot.error}');
@@ -133,7 +134,7 @@ class _CustomDialogState extends State<CustomDialog> {
     DocumentReference ref = record.reference;
     // get actual snapshot from Cloud Firestore
     return StreamBuilder<QuerySnapshot>(
-      stream: ref.collection('lessons').snapshots(),
+      stream: ref.collection('modules').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
@@ -178,7 +179,7 @@ class _CustomDialogState extends State<CustomDialog> {
             context,
             MaterialPageRoute(
                 builder: (context) => Item(
-                      subject: widget.subject,
+                      subject: data,
                     )));
       },
     );
