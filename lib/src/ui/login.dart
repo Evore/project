@@ -7,7 +7,6 @@ import 'dart:io';
 import '../home.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
-Future<FirebaseUser> _firebaseUser;
 
 class LoginPage extends StatefulWidget {
   @override

@@ -5,7 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/semesterdata.dart';
 import '../models/subjectdata.dart';
-import 'next.dart';
 import 'customdialog.dart';
 
 class SemesterWidget extends StatefulWidget {

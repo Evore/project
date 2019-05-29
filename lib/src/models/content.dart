@@ -1,19 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Course {
+class Content {
   final String name, content;
   final bool test;
   final DocumentReference reference;
 
-  Course.fromMap(Map<String, dynamic> map, {this.reference})
+  Content.fromMap(Map<String, dynamic> map, {this.reference})
       : name = map['name'],
       test = map['test'],
-      content = map['course']
-      ;
+      content = map['course'];
 
-  Course.fromSnapshot(DocumentSnapshot snapshot)
+  Content.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
 
   @override
-  String toString() => "Course<$name:";
+  String toString() => "$name:";
 }

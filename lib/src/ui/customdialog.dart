@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/foundation.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 
 import 'next.dart';
 import '../models/subjectdata.dart';
@@ -116,11 +115,11 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget buildList(BuildContext context, List<dynamic> snapshot) {
-    bool isPortrait;
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
-      isPortrait = false;
-    } else
-      isPortrait = true;
+    // bool isPortrait;
+    // if (MediaQuery.of(context).orientation == Orientation.landscape) {
+    //   isPortrait = false;
+    // } else
+    //   isPortrait = true;
 
     return Container(
       padding: EdgeInsets.only(bottom: 10, top: 0),
@@ -162,11 +161,11 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget buildCList(BuildContext context, List<dynamic> snapshot) {
-    bool isPortrait;
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
-      isPortrait = false;
-    } else
-      isPortrait = true;
+    // bool isPortrait;
+    // if (MediaQuery.of(context).orientation == Orientation.landscape) {
+    //   isPortrait = false;
+    // } else
+    //   isPortrait = true;
 
     return Container(
       padding: EdgeInsets.only(bottom: 10, top: 0),

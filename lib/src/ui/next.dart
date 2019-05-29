@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../models/subjectdata.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'tab.dart' as l1;
+import 'tabs.dart' as l1;
 import '../models/record.dart';
 
 class Item extends StatefulWidget {
@@ -180,13 +180,13 @@ class _ItemState extends State<Item> {
         ),
         border: Border.all(
           color: Color(0xFF64A5F6),
-          width: 1,
+          width: 1.3,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey[300],
-            blurRadius: 2,
-            spreadRadius: 2,
+            color: Colors.grey[200],
+            blurRadius: 1,
+            spreadRadius: 1,
             offset: Offset(0.0, 2),
           )
         ],
@@ -216,13 +216,13 @@ class _ItemState extends State<Item> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    '$record.name',
+                    record.name,
                     style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey[800],
                         fontWeight: FontWeight.w500),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   // iconBar()
                 ],
               ),
@@ -264,3 +264,4 @@ class _ItemState extends State<Item> {
     );
   }
 }
+

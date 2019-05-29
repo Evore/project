@@ -2,8 +2,10 @@ library tabcontent;
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/course.dart';
+import '../models/content.dart';
 import '../models/record.dart';
+import 'editor.dart';
+import 'tabsui.dart';
 
 class ContentTabs extends StatefulWidget {
   ContentTabs({this.calldata});
@@ -43,10 +45,10 @@ class _ContentTabsState extends State<ContentTabs> {
   }
 
   Widget snaps(BuildContext context, List<dynamic> snapshots) {
-    List<Course> items =
-        snapshots.map((data) => Course.fromSnapshot(data)).toList();
+    List<Content> items =
+        snapshots.map((data) => Content.fromSnapshot(data)).toList();
 
-    return items.isNotEmpty ? tabContainer(context, items) : emptySnaps();
+    return items.isNotEmpty ? body(context, items) : emptySnaps();
   }
 
   Widget emptySnaps() {
@@ -59,12 +61,12 @@ class _ContentTabsState extends State<ContentTabs> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Nothing to here yet.',
+                'Nothing to see here yet.',
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 5),
+              // SizedBox(height: 5),
               Text(
-                'Feel free to browse other collections. In the meanwhile',
+                'Feel free to browse other collections in the meanwhile.',
                 textAlign: TextAlign.center,
               )
             ],
@@ -74,7 +76,7 @@ class _ContentTabsState extends State<ContentTabs> {
     );
   }
 
-  Widget tabContainer(BuildContext context, List<Course> items) {
+  Widget body(BuildContext context, List<Content> items) {
     int length = items.length;
     return DefaultTabController(
       length: length,
@@ -85,7 +87,7 @@ class _ContentTabsState extends State<ContentTabs> {
             tabs: List<Widget>.generate(
               length,
               (int index) {
-                Course item = items[index];
+                Content item = items[index];
                 return Tab(
                     icon:
                         item.test ? Icon(Icons.assignment) : Icon(Icons.book));
@@ -98,50 +100,29 @@ class _ContentTabsState extends State<ContentTabs> {
           children: List<Widget>.generate(
             length,
             (int index) {
-              return contents(items[index]);
+              Content content = items[index];
+              return TabContents(
+                content: content,
+              );
             },
           ),
         ),
+        floatingActionButton: IconButton(
+          icon: CircleAvatar(
+            child: Icon(Icons.edit),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Editor(
+                      ref: widget.calldata.reference,
+                    ),
+              ),
+            );
+          },
+        ),
       ),
     );
-  }
-
-  Widget contents(record) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(2))),
-              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-              child: Container(
-                width: fullWidth,
-                padding: EdgeInsets.all(4),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    contentItem(record.name, '\n' + record.test.toString(),
-                        true, 'emphasis'),
-                    contentItem('middle'),
-                    contentItem('end')
-                  ],
-                ),
-              ))
-        ]);
-  }
-
-  Widget contentItem(String text,
-      [String text2 = '', bool colored = false, String colorType]) {
-    if (colored && colorType == null) text += ' $colored';
-    return Container(
-        width: fullWidth,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: colored
-              ? colorType == 'emphasis' ? Colors.lime : Colors.lightGreen
-              : null,
-        ),
-        padding: EdgeInsets.all(4),
-        child: Text(text + text2));
   }
 }
