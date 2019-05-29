@@ -27,7 +27,9 @@ class _CustomDialogState extends State<CustomDialog> {
     return Card(
       elevation: 6,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderRadius: BorderRadius.all(
+          Radius.circular(8),
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min, // To make the card compact
@@ -60,15 +62,19 @@ class _CustomDialogState extends State<CustomDialog> {
     return Container(
       padding: EdgeInsets.all(13),
       decoration: BoxDecoration(
-          color: Colors.blue[400],
-          boxShadow: [
-            BoxShadow(
-                color: Color(0x33000000),
-                blurRadius: 0.0,
-                spreadRadius: 0.0,
-                offset: Offset(0, 1)),
-          ],
-          borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+        color: Colors.blue[400],
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x33000000),
+            blurRadius: 0.0,
+            spreadRadius: 0.0,
+            offset: Offset(0, 1),
+          ),
+        ],
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(8),
+        ),
+      ),
       child: Row(
         children: <Widget>[
           Text(
@@ -81,7 +87,8 @@ class _CustomDialogState extends State<CustomDialog> {
             ),
           ),
         ],
-      ));
+      ),
+    );
   }
 
   Widget getParent(BuildContext context) {
@@ -98,7 +105,9 @@ class _CustomDialogState extends State<CustomDialog> {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return new Center(child: new CircularProgressIndicator());
+            return new Center(
+              child: new CircularProgressIndicator(),
+            );
           default:
             return buildList(context, snapshot.data.documents);
         }
@@ -117,8 +126,11 @@ class _CustomDialogState extends State<CustomDialog> {
       padding: EdgeInsets.only(bottom: 10, top: 0),
       child: ListView(
         shrinkWrap: true,
-        children:
-            snapshot.map((data) => getChildNode(data)).toList(),
+        children: snapshot
+            .map(
+              (data) => getChildNode(data),
+            )
+            .toList(),
       ),
     );
   }
@@ -139,7 +151,9 @@ class _CustomDialogState extends State<CustomDialog> {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return new Center(child: new CircularProgressIndicator());
+            return new Center(
+              child: new CircularProgressIndicator(),
+            );
           default:
             return buildCList(context, snapshot.data.documents);
         }
@@ -156,14 +170,17 @@ class _CustomDialogState extends State<CustomDialog> {
 
     return Container(
       padding: EdgeInsets.only(bottom: 10, top: 0),
-      child: ListView(  
+      child: ListView(
         shrinkWrap: true,
-        children:
-            snapshot.map((data) => _buildListItem(context, data)).toList(),
+        children: snapshot
+            .map(
+              (data) => _buildListItem(context, data),
+            )
+            .toList(),
       ),
     );
   }
-  
+
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final subject = SubjectData.fromSnapShot(data);
 
@@ -176,11 +193,13 @@ class _CustomDialogState extends State<CustomDialog> {
       child: Text(data.name),
       onPressed: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Item(
-                      subject: data,
-                    )));
+          context,
+          MaterialPageRoute(
+            builder: (context) => Item(
+                  subject: data,
+                ),
+          ),
+        );
       },
     );
   }

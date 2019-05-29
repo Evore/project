@@ -30,7 +30,9 @@ class _SemesterWidgetState extends State<SemesterWidget> {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return new Center(child: new CircularProgressIndicator());
+            return new Center(
+              child: new CircularProgressIndicator(),
+            );
           default:
             return buildList(context, snapshot.data.documents);
         }
@@ -41,16 +43,20 @@ class _SemesterWidgetState extends State<SemesterWidget> {
   Widget buildList(BuildContext context, List<dynamic> snapshot) {
     return Container(
       decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [Colors.blue.shade500, Colors.red.shade300],
-              stops: [0.4, 1])),
+        gradient: LinearGradient(
+          colors: [Colors.blue.shade500, Colors.red.shade300],
+          stops: [0.4, 1],
+        ),
+      ),
       child: Stack(
         children: <Widget>[
           ListView(
             scrollDirection: Axis.vertical,
             padding: EdgeInsets.only(top: 20),
-            children:
-                snapshot.map((data) => _buildListItem(context, data)).toList(),
+            children: snapshot
+                .map(
+                  (data) => _buildListItem(context, data),
+                ).toList(),
           ),
         ],
       ),
@@ -63,17 +69,22 @@ class _SemesterWidgetState extends State<SemesterWidget> {
 
     return Container(
       padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [shadow]),
-      child: Row(children: [
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[900],
-            fontWeight: FontWeight.w600,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [shadow],
+      ),
+      child: Row(
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[900],
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 
@@ -88,13 +99,18 @@ class _SemesterWidgetState extends State<SemesterWidget> {
         elevation: 1,
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4))),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          buildTitle(context, record.name),
-          SubjectWidget(
-            reference: record.reference,
-          )
-        ]),
+            borderRadius: BorderRadius.all(
+          Radius.circular(4),
+        )),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildTitle(context, record.name),
+            SubjectWidget(
+              reference: record.reference,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -125,7 +141,9 @@ class _SubjectWidgetState extends State<SubjectWidget> {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return new Center(child: new CircularProgressIndicator());
+            return new Center(
+              child: new CircularProgressIndicator(),
+            );
           default:
             return buildList(context, snapshot.data.documents);
         }
@@ -151,8 +169,10 @@ class _SubjectWidgetState extends State<SubjectWidget> {
         mainAxisSpacing: 0,
         crossAxisCount: 1,
         scrollDirection: Axis.horizontal,
-        children:
-            snapshot.map((data) => _buildListItem(context, data)).toList(),
+        children: snapshot
+            .map(
+              (data) => _buildListItem(context, data),
+            ).toList(),
       ),
     );
   }
@@ -166,56 +186,62 @@ class _SubjectWidgetState extends State<SubjectWidget> {
 
   Widget subjectInfo(BuildContext context, SubjectData data) {
     return MaterialButton(
-        padding: EdgeInsets.all(isPortrait ? 2 : 4),
-        onPressed: () {
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => Item(
-          //               subject: data,
-          //             )));
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => CustomDialog(
-              subject: data,
-            )
-          );
-        },
-        child: Column(
-          //TODO: use a stack layout and curve the top corners
-          children: <Widget>[
-            AspectRatio(
-                //keeps the container in proportional width and height
-                aspectRatio: 1 / 1,
-                child: Card(
-                    shape: CircleBorder(),
-                    elevation: 6,
-                    color: Colors.white,
-                    margin: EdgeInsets.all(14),
-                    child: ClipOval(
-                        child: CachedNetworkImage(
-                      imageUrl: data.imageName,
-                      placeholder: (context, url) =>
-                          new CircularProgressIndicator(),
-                      errorWidget: (context, url, error) =>
-                          new Icon(Icons.error),
-                    )))),
-            Expanded(
-                child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 3),
-                    child: Column(children: [
-                      Text(
-                        data.name,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey[800]),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
-                      ),
-                    ]))),
-          ],
-        ));
+      padding: EdgeInsets.all(isPortrait ? 2 : 4),
+      onPressed: () {
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => Item(
+        //               subject: data,
+        //             ),));
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => CustomDialog(
+                subject: data,
+              ),
+        );
+      },
+      child: Column(
+        //TODO: use a stack layout and curve the top corners
+        children: <Widget>[
+          AspectRatio(
+            //keeps the container in proportional width and height
+            aspectRatio: 1 / 1,
+            child: Card(
+                shape: CircleBorder(),
+                elevation: 6,
+                color: Colors.white,
+                margin: EdgeInsets.all(14),
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: data.imageName,
+                    placeholder: (context, url) =>
+                        new CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => new Icon(Icons.error),
+                  ),
+                )),
+          ),
+          Expanded(
+              child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+            child: Column(
+              children: [
+                Text(
+                  data.name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[800],
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                ),
+              ],
+            ),
+          )),
+        ],
+      ),
+    );
   }
 }

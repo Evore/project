@@ -23,13 +23,8 @@ class _ItemState extends State<Item> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.blueGrey[800],
-          size: 1
-        ),
-        textTheme: TextTheme(
-          title: TextStyle(color: Colors.grey)
-        ),
+        iconTheme: IconThemeData(color: Colors.blueGrey[800], size: 1),
+        textTheme: TextTheme(title: TextStyle(color: Colors.grey)),
         centerTitle: true,
         title: Text('Learn'),
         backgroundColor: Colors.white,
@@ -43,25 +38,29 @@ class _ItemState extends State<Item> {
 
   Widget custAppBar() {
     return Positioned(
-        top: 35.0,
-        right: 0.0,
-        left: 0.0,
-        child: Container(
-          height: 50,
-          margin: EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(25)),
-            boxShadow: [
-              BoxShadow(
-                  color: Color(0x33000000),
-                  blurRadius: 1,
-                  spreadRadius: 0.0,
-                  offset: Offset(0.0, 1))
-            ],
+      top: 35.0,
+      right: 0.0,
+      left: 0.0,
+      child: Container(
+        height: 50,
+        margin: EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(
+            Radius.circular(25),
           ),
-          child: custAppBarIcons(),
-        ));
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x33000000),
+              blurRadius: 1,
+              spreadRadius: 0.0,
+              offset: Offset(0.0, 1),
+            )
+          ],
+        ),
+        child: custAppBarIcons(),
+      ),
+    );
   }
 
   Widget custAppBarIcons() {
@@ -103,7 +102,9 @@ class _ItemState extends State<Item> {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return new Center(child: new CircularProgressIndicator());
+            return new Center(
+              child: new CircularProgressIndicator(),
+            );
           default:
             return _buildItemPage(context, snapshot.data.documents);
         }
@@ -113,17 +114,22 @@ class _ItemState extends State<Item> {
 
   Widget _buildItemPage(
       BuildContext context, List<DocumentSnapshot> snapshots) {
-
-    return snapshots.isEmpty ?
-        Center(child: Text('Nothing here')) 
+    return snapshots.isEmpty
+        ? Center(
+            child: Text('Nothing here'),
+          )
         : ListView(
-          children: snapshots.map((data) => makeBody(context, data)).toList(),
-        );
+            children: snapshots
+                .map(
+                  (data) => makeBody(context, data),
+                )
+                .toList(),
+          );
   }
 
   Widget makeBody(BuildContext context, DocumentSnapshot data) {
     Record record = Record.fromSnapshot(data);
-    return makeCard(record.name);
+    return makeCard(record);
   }
 
   Widget topContent(BuildContext context, String name) {
@@ -149,13 +155,15 @@ class _ItemState extends State<Item> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('$name',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[700],
-                  )),
+              Text(
+                '$name',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey[700],
+                ),
+              ),
             ],
           ),
         ),
@@ -163,34 +171,39 @@ class _ItemState extends State<Item> {
     );
   }
 
-  Widget makeCard(String name) {
+  Widget makeCard(Record record) {
     return Container(
       margin: new EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
+        borderRadius: BorderRadius.all(
+          Radius.circular(5),
+        ),
         border: Border.all(
           color: Color(0xFF64A5F6),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey[300],
-              blurRadius: 3,
-              spreadRadius: 2,
-              offset: Offset(0.0, 2))
+            color: Colors.grey[300],
+            blurRadius: 2,
+            spreadRadius: 2,
+            offset: Offset(0.0, 2),
+          )
         ],
       ),
-      child: myListTile(name),
+      child: myListTile(record),
     );
   }
 
-  Widget myListTile(name) {
+  Widget myListTile(Record record) {
     return RaisedButton(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       elevation: 0,
       color: Colors.grey[50],
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+          borderRadius: BorderRadius.all(
+        Radius.circular(5),
+      )),
       child: Container(
         child: ConstrainedBox(
           constraints: BoxConstraints(minHeight: 65),
@@ -203,7 +216,7 @@ class _ItemState extends State<Item> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    '$name',
+                    '$record.name',
                     style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey[800],
@@ -215,15 +228,21 @@ class _ItemState extends State<Item> {
               ),
             ),
             Container(
-                height: 50,
-                width: 50,
-                child: Image.asset('assets/computer.png'))
+              height: 50,
+              width: 50,
+              child: Image.asset('assets/computer.png'),
+            )
           ]),
         ),
       ),
       onPressed: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => l1.ContentTabs()));
+            context,
+            MaterialPageRoute(
+              builder: (context) => l1.ContentTabs(
+                calldata: record,
+              ),
+            ));
       },
     );
   }
@@ -237,7 +256,10 @@ class _ItemState extends State<Item> {
           size: 15,
         ),
         SizedBox(width: 10),
-        Text('0/8', style: TextStyle(fontSize: 12, color: Colors.white))
+        Text(
+          '0/8',
+          style: TextStyle(fontSize: 12, color: Colors.white),
+        )
       ],
     );
   }
