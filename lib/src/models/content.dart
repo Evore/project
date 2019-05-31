@@ -11,7 +11,7 @@ class Content {
       : name = map['name'],
         test = map['test'],
         position = map['position'],
-        content = map['course'];
+        content = map['content'];
 
   Content.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
