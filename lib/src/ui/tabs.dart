@@ -108,7 +108,7 @@ class _ContentTabsState extends State<ContentTabs> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.edit),
+          child: Icon(Icons.add),
           onPressed: () {
             Navigator.push(
               context,

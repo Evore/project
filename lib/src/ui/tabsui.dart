@@ -14,7 +14,6 @@ class TabContents extends StatelessWidget {
 
   Widget contents(BuildContext context, content) {
     double fullWidth = MediaQuery.of(context).size.width;
-    print(fullWidth);
     return Container(
       width: fullWidth,
       child: Column(
