@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/content.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class TabContents extends StatelessWidget {
   TabContents({this.content});
@@ -26,32 +27,18 @@ class TabContents extends StatelessWidget {
                 child: Container(
                   // width: fullWidth,
                   padding: EdgeInsets.all(4),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      contentItem(context, content.name, '\n' + content.test.toString(),
-                          true, 'emphasis'),
-                      contentItem(context, 'middle'),
-                      contentItem(context, 'end')
-                    ],
-                  ),
+                  child: contentItem(context)
                 ))
           ]),
     );
   }
 
-  Widget contentItem(context, String text,
-      [String text2 = '', bool colored = false, String colorType]) {
-    if (colored && colorType == null) text += ' $colored';
+  Widget contentItem(context,
+      [String text = '', String text2 = '', bool colored = false, String colorType]) {
+    
     return Container(
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          color: colored
-              ? colorType == 'emphasis' ? Colors.lime : Colors.lightGreen
-              : null,
-        ),
         padding: EdgeInsets.all(4),
-        child: Text(text + text2));
+        child: MarkdownBody (data: ' # $text \n # $text2'));
   }
 }

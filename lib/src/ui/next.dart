@@ -94,7 +94,6 @@ class _ItemState extends State<Item> {
 
   Widget _buildBody(BuildContext context) {
     DocumentReference ref = widget.subject.reference;
-    print("REFERENCE " + ref.documentID);
     // get actual snapshot from Cloud Firestore
     return StreamBuilder<QuerySnapshot>(
       stream: ref.collection("submodules").snapshots(),

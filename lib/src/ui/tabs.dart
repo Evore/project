@@ -107,17 +107,15 @@ class _ContentTabsState extends State<ContentTabs> {
             },
           ),
         ),
-        floatingActionButton: IconButton(
-          icon: CircleAvatar(
-            child: Icon(Icons.edit),
-          ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.edit),
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => Editor(
-                      ref: widget.calldata.reference,
-                    ),
+                  data: widget.calldata,
+                ),
               ),
             );
           },

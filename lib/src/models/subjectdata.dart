@@ -14,8 +14,7 @@ class SubjectData {
   SubjectData.fromSnapShot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
 
-  SubjectData.fromDbMap(Map<String, dynamic> query)
-      : courseId = query['courseId'],
-        name = query['name'],
-        imageName = query['imageName'];
+  
+  @override
+  String toString() => "SubjectData<$name:";
 }

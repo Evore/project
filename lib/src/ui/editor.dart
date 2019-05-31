@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/content.dart';
+import '../models/record.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class Editor extends StatefulWidget {
-  Editor({this.ref});
-  final DocumentReference ref;
+  Editor({this.data, this.isDocumentNew});
+  final bool isDocumentNew;
+  final Record data;
   _EditorState createState() => _EditorState();
 }
 
 class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
   TabController _controller;
-  TextEditingController _editingController, _editingController2;
+  TextEditingController _titleCtrl, _contentCtrl;
 
   String title = '';
   String content = '';
@@ -20,13 +23,15 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _controller = TabController(length: 2, vsync: this);
-    _editingController = TextEditingController();
+    _titleCtrl = TextEditingController();
+    _contentCtrl = TextEditingController();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.grey),
         backgroundColor: Colors.white,
         //TODO make the title dynamic
         title: Text(
@@ -34,9 +39,18 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
           style: TextStyle(color: Colors.black),
         ),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.check),
-            onPressed: () {},
+          FlatButton(
+            child: Text('Save'),
+            onPressed: () {
+              newContent = Content(
+                name: _titleCtrl.text,
+                content: _contentCtrl.text,
+                test: false,
+                position: 4
+              );
+
+              // widget.isDocumentNew ? _addToDatabase(newContent) : _updateData(+data)
+            },
           )
         ],
         bottom: TabBar(
@@ -61,17 +75,32 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
         controller: _controller,
         children: <Widget>[editorPage(context), preview(context)],
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.edit),
+        onPressed: () {
+          _contentCtrl.text +=
+              "\n ## ![Flutter logo](https://cdn-images-1.medium.com/max/1600/1*6xT0ZOACZCdy_61tTJ3r1Q.png)";
+        },
+      ),
     );
   }
 
   Widget editorPage(BuildContext context) {
-    return Column(
+    BoxDecoration decoration = BoxDecoration(
+        border: Border.all(color: Colors.grey[300], width: 1),
+        borderRadius: BorderRadius.circular(5));
+
+    return ListView(
       children: [
         Container(
-          padding: EdgeInsets.all(12),
+          margin: EdgeInsets.fromLTRB(10, 25, 10, 10),
+          decoration: decoration,
+          padding: EdgeInsets.symmetric(horizontal: 6),
           child: TextField(
             maxLines: null,
-            controller: _editingController,
+            autocorrect: true,
+            textCapitalization: TextCapitalization.words,
+            controller: _titleCtrl,
             decoration: InputDecoration(
                 border: InputBorder.none, hintText: 'Enter your title here'),
             onChanged: (String text) {
@@ -82,16 +111,20 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
           ),
         ),
         Container(
-          padding: EdgeInsets.all(12),
+          margin: EdgeInsets.all(10),
+          decoration: decoration,
+          padding: EdgeInsets.symmetric(horizontal: 6),
           child: TextField(
-            maxLines: null,
-            controller: _editingController2,
+            maxLines: 17,
+            autocorrect: true,
+            textCapitalization: TextCapitalization.sentences,
+            controller: _contentCtrl,
             decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'The rest of the content goes here'),
+                border: InputBorder.none,
+                hintText: 'The rest of the content goes here'),
             onChanged: (String text) {
               setState(() {
-                this.content = text;
+                content = text;
               });
             },
           ),
@@ -102,8 +135,35 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
 
   Widget preview(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
-      //  child: Text(text),
-    );
+        padding: EdgeInsets.all(10),
+        child: new MarkdownBody(data: '$title \n$content'));
+  }
+
+  Future<void> _addToDatabase(Content content) {
+    return Firestore.instance.runTransaction((Transaction transaction) async {
+      CollectionReference reference = widget.data.reference.collection('content');
+
+      await reference.add({
+        "name": "${content.name}",
+        "content": "${content.content}",
+        "position": "${content.position}",
+        "test": "${content.test}",
+        "reference": "${content.reference}",
+      });
+    });
+  }
+
+  Future<void> _updateData(Content content) {
+    return Firestore.instance.runTransaction((Transaction transaction) async {
+      DocumentReference reference = content.reference;
+
+      await reference.updateData({
+        "name": "${content.name}",
+        "content": "${content.content}",
+        "position": "${content.position}",
+        "test": "${content.test}",
+        "reference": "${content.reference}",
+      });
+    });
   }
 }
