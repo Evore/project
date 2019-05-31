@@ -5,9 +5,10 @@ import '../models/record.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class Editor extends StatefulWidget {
-  Editor({this.data, this.isDocumentNew});
+  Editor({this.data, this.isDocumentNew, this.existingData});
   final bool isDocumentNew;
   final Record data;
+  final Content existingData;
   _EditorState createState() => _EditorState();
 }
 
@@ -27,6 +28,12 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
     _contentCtrl = TextEditingController();
   }
 
+  void prepEdits(Content content) {
+    if (widget.existingData.isNotNull())
+      _titleCtrl.text = widget.existingData.name;
+    _contentCtrl.text = widget.existingData.content;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,13 +50,13 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
             child: Text('Save'),
             onPressed: () {
               newContent = Content(
-                name: _titleCtrl.text,
-                content: _contentCtrl.text,
-                test: false,
-                position: 4
-              );
-
-              // widget.isDocumentNew ? _addToDatabase(newContent) : _updateData(+data)
+                  name: _titleCtrl.text,
+                  content: _contentCtrl.text,
+                  test: false,
+                  position: 4);
+              widget.isDocumentNew
+                  ? _addToDatabase(newContent)
+                  : _updateData(widget.existingData);
             },
           )
         ],
@@ -141,7 +148,8 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
 
   Future<void> _addToDatabase(Content content) {
     return Firestore.instance.runTransaction((Transaction transaction) async {
-      CollectionReference reference = widget.data.reference.collection('content');
+      CollectionReference reference =
+          widget.data.reference.collection('content');
 
       await reference.add({
         "name": "${content.name}",
