@@ -81,29 +81,40 @@ class _ContentTabsState extends State<ContentTabs> {
     return DefaultTabController(
       length: length,
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 1,
-          bottom: TabBar(
-            tabs: List<Widget>.generate(
-              length,
-              (int index) {
-                Content item = items[index];
-                return Tab(
-                    icon:
-                        item.test ? Icon(Icons.assignment) : Icon(Icons.book));
-              },
-            ),
-          ),
-        ),
-        backgroundColor: Colors.grey[200],
+        appBar: new PreferredSize(
+            preferredSize: Size.fromHeight(kToolbarHeight),
+            child: Container(
+              color: Colors.blue,
+              child: Column(
+                children: [
+                Expanded(
+                  child: Container(),
+                ),
+                TabBar(
+                  indicatorColor: Colors.grey[600],
+                  tabs: List<Widget>.generate(
+                    length,
+                    (int index) {
+                      Content item = items[index];
+                      return Tab(
+                          icon: item.test
+                              ? Icon(Icons.assignment)
+                              : Icon(Icons.book));
+                    },
+                  ),
+                ),
+                ]
+              ),
+            )),
+        backgroundColor: Colors.grey[100],
         body: TabBarView(
           children: List<Widget>.generate(
             length,
             (int index) {
               Content content = items[index];
-              return TabContents(
-                content: content,
-              );
+              return content.test 
+              ? TabContents(content: content)
+              : Container();
             },
           ),
         ),
@@ -114,8 +125,8 @@ class _ContentTabsState extends State<ContentTabs> {
               context,
               MaterialPageRoute(
                 builder: (context) => Editor(
-                  data: widget.calldata,
-                ),
+                      data: widget.calldata,
+                    ),
               ),
             );
           },

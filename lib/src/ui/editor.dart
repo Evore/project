@@ -13,12 +13,13 @@ class Editor extends StatefulWidget {
 
 class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
   TabController _controller;
-  TextEditingController _titleCtrl, _contentCtrl;
+  TextEditingController _titleCtrl, _contentCtrl, _posCtrl;
 
   bool isDocumentNew = true;
   String title = '';
   String content = '';
-  Content newContent;
+  String position = '';
+  bool test = false;
 
   @override
   void initState() {
@@ -26,6 +27,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
     _controller = TabController(length: 2, vsync: this);
     _titleCtrl = TextEditingController();
     _contentCtrl = TextEditingController();
+    _posCtrl = TextEditingController();
     prepEdits();
   }
 
@@ -37,6 +39,11 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
     }
   }
 
+  Content newConten(String name, String content, bool test, int position) {
+    return new Content(
+        name: name, content: content, test: test, position: position);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,8 +51,9 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
         iconTheme: IconThemeData(color: Colors.grey),
         backgroundColor: Colors.white,
         //TODO make the title dynamic
+
         title: Text(
-          'Editor',
+          isDocumentNew ? 'Editor' : widget.existingData.name,
           style: TextStyle(color: Colors.black),
         ),
         actions: <Widget>[
@@ -53,15 +61,15 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
             shape: CircleBorder(),
             child: Text('Save'),
             onPressed: () {
-              print("VALUE OF: $isDocumentNew");
-              newContent = Content(
+              print("Is this a new document? : $isDocumentNew");
+              Content content = Content(
                   name: _titleCtrl.text,
                   content: _contentCtrl.text,
                   test: false,
                   position: 4);
               // isDocumentNew
-                  _addToDatabase(newContent);
-                  // : _updateData(widget.existingData);
+              _addToDatabase(content);
+              // : _updateData(widget.existingData);
             },
           )
         ],
@@ -87,20 +95,53 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
         controller: _controller,
         children: <Widget>[editorTab(context), preview(context)],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.edit),
-        onPressed: () {
-          _contentCtrl.text +=
-              "\n ## ![Flutter logo](https://cdn-images-1.medium.com/max/1600/1*6xT0ZOACZCdy_61tTJ3r1Q.png)";
-        },
+      //TODO: fix this
+      // floatingActionButton: editingActions(),
+    );
+  }
+
+  Widget editingActions() {
+    return Container(
+      height: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Container(
+            height: 40,
+            child: FloatingActionButton(
+              backgroundColor: Colors.white,
+              elevation: 2,
+              child: Icon(Icons.edit, color: Colors.blue),
+              onPressed: () {
+                _contentCtrl.text +=
+                    "\n## ![Flutter logo](https://cdn-images-1.medium.com/max/1600/1*6xT0ZOACZCdy_61tTJ3r1Q.png)";
+              },
+            ),
+          ),
+          Container(
+            height: 40,
+            child: FloatingActionButton(
+              backgroundColor: Colors.white,
+              elevation: 2,
+              child: Icon(
+                Icons.image,
+                color: Colors.green,
+              ),
+              onPressed: () {
+                _contentCtrl.text +=
+                    "\n## ![Flutter logo](https://cdn-images-1.medium.com/max/1600/1*6xT0ZOACZCdy_61tTJ3r1Q.png)";
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget editorTab(BuildContext context) {
     BoxDecoration decoration = BoxDecoration(
-      color: Colors.grey[100],
-        border: Border.all(color: Colors.grey[300], width: 1),
+        color: Colors.grey[100],
+        border: Border.all(color: Colors.grey[200], width: 1),
         borderRadius: BorderRadius.circular(2));
 
     return Container(
@@ -108,7 +149,10 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
       child: ListView(
         children: [
           SizedBox(height: 20),
-          Text('Title', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+          Text(
+            'Title',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
           Container(
             margin: EdgeInsets.fromLTRB(0, 5, 0, 15),
             decoration: decoration,
@@ -127,7 +171,38 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
               },
             ),
           ),
-          Text('Title', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 5, 0, 15),
+            child: Row(
+              mainAxisAlignment:MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 150,
+                  margin: EdgeInsets.fromLTRB(0, 5, 20, 15),
+                  decoration: decoration,
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    maxLines: 1,
+                    autocorrect: true,
+                    textCapitalization: TextCapitalization.words,
+                    controller: _posCtrl,
+                    decoration: InputDecoration(
+                        border: InputBorder.none, hintText: 'Order'),
+                    onChanged: (String text) {
+                      setState(() {
+                        position = text;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            'Content',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
           Container(
             margin: EdgeInsets.fromLTRB(0, 5, 0, 10),
             decoration: decoration,
@@ -153,9 +228,9 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
   }
 
   Widget preview(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(10),
-        child: new MarkdownBody(data: '$title \n$content'));
+    return ListView(padding: EdgeInsets.all(10), children: [
+      new MarkdownBody(data: '# $title \n$content'),
+    ]);
   }
 
   Future<void> _addToDatabase(Content content) {

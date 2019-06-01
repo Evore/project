@@ -1,75 +1,51 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../models/content.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
-// class Test extends StatefulWidget{
-//   _TestState createState() => _TestState();
-// }
+class TabContents extends StatelessWidget {
+  // Take a test object
+  TabContents({this.content});
+  final Content content;
 
-// _TestState extends State<Test>{
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//             appBar: AppBar(
-//               title: Text('Radio Class'),
-//               centerTitle: true,
-//               backgroundColor: Colors.blue,
-//             ),
-//             body: Container(
-//                 padding: EdgeInsets.all(8.0),
-//                 child: Column(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: <Widget>[
-//                      Text(
-//                         'Select correct answers from below:',
-//                         style: TextStyle(
-//                             fontSize: 20.0, fontWeight: FontWeight.bold),
-//                       ),
-//                      Padding(
-//                         padding: EdgeInsets.all(8.0),
-//                       ),
-//                      Divider(height: 5.0, color: Colors.black),
-//                      Padding(
-//                         padding: EdgeInsets.all(8.0),
-//                       ),
-//                      Text(
-//                         'Lion is :',
-//                         style: TextStyle(
-//                           fontWeight: FontWeight.bold,
-//                           fontSize: 18.0,
-//                         ),
-//                       ),
-//                      Row(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: <Widget>[
-//                          Radio(
-//                             value: 0,
-//                             groupValue: _radioValue1,
-//                             onChanged: _handleRadioValueChange1,
-//                           ),
-//                          Text(
-//                             'Carnivore',
-//                             style: TextStyle(fontSize: 16.0),
-//                           ),
-//                          Radio(
-//                             value: 1,
-//                             groupValue: _radioValue1,
-//                             onChanged: _handleRadioValueChange1,
-//                           ),
-//                          Text(
-//                             'Herbivore',
-//                             style: TextStyle(
-//                               fontSize: 16.0,
-//                             ),
-//                           ),
-//                          Radio(
-//                             value: 2,
-//                             groupValue: _radioValue1,
-//                             onChanged: _handleRadioValueChange1,
-//                           ),
-//                          Text(
-//                             'Omnivore',
-//                             style: TextStyle(fontSize: 16.0),
-//                           ),
-//                         ],
-//                       );
-                      
-// }
+  @override
+  Widget build(BuildContext context) {
+    return contents(context, content);
+  }
+
+  Widget contents(BuildContext context, content) {
+    double fullWidth = MediaQuery.of(context).size.width;
+    return Container(
+      width: fullWidth,
+      child: ListView(children: [
+        Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(2))),
+            margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+            child: Container(
+                // width: fullWidth,
+                padding: EdgeInsets.all(4),
+                child: contentItem(context, content))),
+      ]),
+    );
+  }
+
+  Widget contentItem(context, Content content) {
+    dynamic title = content.name.split('#').last;
+    var conts = content.content.replaceAll('\\n', '\n');
+    return Column(children: [
+      Container(
+        padding: EdgeInsets.all(10),
+        child: Text(
+          '$title',
+          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 23),
+        ),
+      ),
+      Divider(height: 1),
+      Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.all(4),
+        child: MarkdownBody(data: conts),
+      ),
+    ]);
+  }
+}
