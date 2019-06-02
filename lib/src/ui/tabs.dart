@@ -2,6 +2,7 @@ library tabcontent;
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project/src/ui/testsui.dart';
 import '../models/content.dart';
 import '../models/record.dart';
 import 'editor.dart';
@@ -113,8 +114,8 @@ class _ContentTabsState extends State<ContentTabs> {
             (int index) {
               Content content = items[index];
               return content.test 
-              ? TabContents(content: content)
-              : Container();
+              ? TestContents(reference: content.reference,)
+              : TabContents(content: content);
             },
           ),
         ),

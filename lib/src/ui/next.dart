@@ -28,67 +28,11 @@ class _ItemState extends State<Item> {
         centerTitle: true,
         title: Text('Learn'),
         backgroundColor: Colors.white,
-        elevation: 1,
+        elevation: 10,
       ),
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.grey[100],
       body: _buildBody(context),
-    );
-  }
-
-  Widget custAppBar() {
-    return Positioned(
-      top: 35.0,
-      right: 0.0,
-      left: 0.0,
-      child: Container(
-        height: 50,
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(
-            Radius.circular(25),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0x33000000),
-              blurRadius: 1,
-              spreadRadius: 0.0,
-              offset: Offset(0.0, 1),
-            )
-          ],
-        ),
-        child: custAppBarIcons(),
-      ),
-    );
-  }
-
-  Widget custAppBarIcons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        IconButton(
-          icon: Icon(Icons.navigate_before),
-          color: Colors.grey[800],
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        Text(
-          'Learn',
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w300,
-              color: Colors.grey[900]),
-        ),
-        IconButton(
-          icon: Icon(Icons.search),
-          color: Colors.grey[800],
-          onPressed: () {
-            // Navigator.pop(context);
-          },
-        ),
-      ],
     );
   }
 
@@ -130,46 +74,6 @@ class _ItemState extends State<Item> {
     Record record = Record.fromSnapshot(data);
     return makeCard(record);
   }
-
-  Widget topContent(BuildContext context, String name) {
-    var width = MediaQuery.of(context).size.width;
-
-    return Container(
-      padding: EdgeInsets.only(top: 50),
-      height: width / 1.5,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        Container(
-          width: width * 0.375,
-          child: CachedNetworkImage(
-            imageUrl: widget.subject.imageName,
-            placeholder: (context, url) => new CircularProgressIndicator(),
-            errorWidget: (context, url, error) => new Icon(Icons.error),
-          ),
-          padding: EdgeInsets.only(left: 20, right: 5),
-        ),
-        Container(
-          width: width * 0.625,
-          padding: EdgeInsets.only(left: 10, right: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                '$name',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey[700],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ]),
-    );
-  }
-
   Widget makeCard(Record record) {
     return Container(
       margin: new EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -177,16 +81,12 @@ class _ItemState extends State<Item> {
         borderRadius: BorderRadius.all(
           Radius.circular(5),
         ),
-        border: Border.all(
-          color: Color(0xFF64A5F6),
-          width: 1.3,
-        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey[200],
-            blurRadius: 1,
-            spreadRadius: 1,
-            offset: Offset(0.0, 2),
+            color: Colors.grey[400],
+            blurRadius: 3,
+            spreadRadius: 0,
+            offset: Offset(0.0, 1),
           )
         ],
       ),
@@ -201,7 +101,7 @@ class _ItemState extends State<Item> {
       color: Colors.grey[50],
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
-        Radius.circular(5),
+        Radius.circular(3),
       )),
       child: Container(
         child: ConstrainedBox(
@@ -246,21 +146,5 @@ class _ItemState extends State<Item> {
     );
   }
 
-  Widget iconBar() {
-    return Row(
-      children: <Widget>[
-        Icon(
-          Icons.slideshow,
-          color: Colors.white,
-          size: 15,
-        ),
-        SizedBox(width: 10),
-        Text(
-          '0/8',
-          style: TextStyle(fontSize: 12, color: Colors.white),
-        )
-      ],
-    );
-  }
 }
 

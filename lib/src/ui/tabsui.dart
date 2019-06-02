@@ -29,8 +29,8 @@ class TabContents extends StatelessWidget {
   }
 
   Widget contentItem(context, Content content) {
-    dynamic title = content.name.split('#').last;
-    var conts = content.content.replaceAll('\\n', '\n');
+    String title = content.name.split('#').last;
+    String conts = content.content.replaceAll('\\n', '\n');
     return Column(children: [
       Container(
         padding: EdgeInsets.all(10),

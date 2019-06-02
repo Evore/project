@@ -27,7 +27,7 @@ class _CustomDialogState extends State<CustomDialog> {
       elevation: 6,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
-          Radius.circular(8),
+          Radius.circular(3),
         ),
       ),
       child: Column(
@@ -35,15 +35,6 @@ class _CustomDialogState extends State<CustomDialog> {
         children: <Widget>[
           buildTitle(),
           getParent(context),
-          // Align(
-          //   alignment: Alignment.bottomLeft,
-          //   child: FlatButton(
-          //     onPressed: () {
-          //       Navigator.of(context).pop(); // To close the dialog
-          //     },
-          //     child: Text("buttonText"),
-          //   ),
-          // ),
         ],
       ),
     );
@@ -71,7 +62,7 @@ class _CustomDialogState extends State<CustomDialog> {
           ),
         ],
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(8),
+          top: Radius.circular(3),
         ),
       ),
       child: Row(

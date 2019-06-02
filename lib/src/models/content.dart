@@ -1,10 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum TestType{
-  MCQ,
-  FILL_IN,
-}
-
 class Content {
   Content({this.name, this.content, this.test, this.position, this.reference});
   String name, content;
