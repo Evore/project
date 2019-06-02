@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project/src/models/testmodel.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 class TestContents extends StatelessWidget {
   // Take a test
@@ -73,20 +72,34 @@ class SectionState extends State<TestSection> {
   @override
   Widget build(BuildContext context) {
     answer = widget.test.answer;
-    return Column(
-      children: <Widget>[
-        Container(
-          child: Text(widget.test.question),
+    return Card(
+      shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(2))),
+            margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      child: Container(
+              padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15),
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: 400,
+              padding: EdgeInsets.all(5),
+              child: Text(
+                widget.test.question,
+                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
+              ),
+            ),
+            Container(
+              child: buildoptions(widget.test.choices),
+            )
+          ],
         ),
-        Container(
-          child: buildoptions(widget.test.choices),
-        )
-      ],
+      ),
     );
   }
 
   Widget buildoptions(List list) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
         children: list.map((data) => make2(data, list.indexOf(data))).toList());
   }
 
@@ -101,14 +114,15 @@ class SectionState extends State<TestSection> {
           onChanged: _handleRadioValueChange,
         ),
         Text(text),
+        SizedBox(width: 5),
         rightOrWrong(index == answer)
       ],
     );
   }
 
   Widget rightOrWrong(bool isright) {
-    final right = Icon(Icons.check);
-    final wrong = Icon(Icons.close);
+    final right = Icon(Icons.check, size: 14, color: Colors.green);
+    final wrong = Icon(Icons.close, size: 14, color: Colors.red);
 
     return isSelected == null
         ? Container()

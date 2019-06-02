@@ -23,14 +23,23 @@ class _ItemState extends State<Item> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.blueGrey[800], size: 1),
-        textTheme: TextTheme(title: TextStyle(color: Colors.grey)),
+        iconTheme: IconThemeData(color: Colors.grey[700], size: 1),
+        textTheme: TextTheme(title: TextStyle(color: Colors.grey[700])),
         centerTitle: true,
-        title: Text('Learn'),
+        title: Text(
+          'Learn',
+          style: TextStyle(fontSize: 16),
+        ),
         backgroundColor: Colors.white,
-        elevation: 10,
+        elevation: 5,
+        leading: IconButton(
+          iconSize: 18,
+            icon: Icon(Icons.arrow_back_ios, ),
+            tooltip: 'Back',
+            onPressed: () {
+              Navigator.pop(context);
+            }),
       ),
-      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.grey[100],
       body: _buildBody(context),
     );
@@ -49,17 +58,23 @@ class _ItemState extends State<Item> {
               child: new CircularProgressIndicator(),
             );
           default:
-            return _buildItemPage(context, snapshot.data.documents);
+            return pageFrame(context, snapshot.data.documents);
         }
       },
     );
   }
 
-  Widget _buildItemPage(
-      BuildContext context, List<DocumentSnapshot> snapshots) {
+  Widget pageFrame(BuildContext context, List<DocumentSnapshot> snapshots) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: _buildItemPage(snapshots),
+    );
+  }
+
+  Widget _buildItemPage(List<DocumentSnapshot> snapshots) {
     return snapshots.isEmpty
         ? Center(
-            child: Text('Nothing here'),
+            child: Text('Nothing here yet'),
           )
         : ListView(
             children: snapshots
@@ -74,6 +89,7 @@ class _ItemState extends State<Item> {
     Record record = Record.fromSnapshot(data);
     return makeCard(record);
   }
+
   Widget makeCard(Record record) {
     return Container(
       margin: new EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -139,12 +155,10 @@ class _ItemState extends State<Item> {
             context,
             MaterialPageRoute(
               builder: (context) => l1.ContentTabs(
-                calldata: record,
-              ),
+                    calldata: record,
+                  ),
             ));
       },
     );
   }
-
 }
-

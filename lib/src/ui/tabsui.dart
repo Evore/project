@@ -36,13 +36,14 @@ class TabContents extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: Text(
           '$title',
-          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 23),
+          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
         ),
       ),
       Divider(height: 1),
       Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(4),
+        color: Colors.grey[100],
         child: MarkdownBody(data: conts),
       ),
     ]);
