@@ -1,48 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/content.dart';
+import 'package:project/src/models/testmodel.dart';
 import '../models/record.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-class Editor extends StatefulWidget {
-  Editor({this.data, this.existingData});
-  final Record data;
-  final Content existingData;
-  _EditorState createState() => _EditorState();
+class TestEditor extends StatefulWidget {
+  TestEditor({this.existingData});
+  final Tests existingData;
+  _TestEditorState createState() => _TestEditorState();
 }
 
-class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
+class _TestEditorState extends State<TestEditor>
+    with SingleTickerProviderStateMixin {
   TabController _controller;
-  TextEditingController _titleCtrl, _contentCtrl, _posCtrl;
+  TextEditingController _questionCtrl, _contentCtrl, answerCtrl;
 
   bool isDocumentNew = true;
-  String title = '';
-  String content = '';
-  int position = 0;
-  bool test = false;
+  String question = '';
+  List<String> choices;
+  int answer;
 
   @override
   void initState() {
     super.initState();
     _controller = TabController(length: 2, vsync: this);
-    _titleCtrl = TextEditingController();
+    _questionCtrl = TextEditingController();
     _contentCtrl = TextEditingController();
-    _posCtrl = TextEditingController();
+    answerCtrl = TextEditingController();
     prepEdits();
   }
 
   void prepEdits() {
     if (widget.existingData != null) {
       isDocumentNew = false;
-      _posCtrl.text = widget.existingData.position.toString();
-      _titleCtrl.text = widget.existingData.name;
-      _contentCtrl.text = widget.existingData.content;
+      _questionCtrl.text = widget.existingData.question;
     }
   }
 
-  Content newConten(String name, String content, bool test, int position) {
-    return new Content(
-        name: name, content: content, test: test, position: position);
+  Tests newConten(String question, List choices, int answer) {
+    return new Tests(question: question, choices: choices, answer: answer);
   }
 
   @override
@@ -51,11 +47,28 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         backgroundColor: Colors.white,
+        //TODO make the title dynamic
+
         title: Text(
-          isDocumentNew ? 'Editor' : widget.existingData.name.isNotEmpty ? widget.existingData.name : 'Editor',
+          isDocumentNew ? 'TestEditor' : widget.existingData.question,
           style: TextStyle(color: Colors.black),
         ),
-        actions: <Widget>[saveAction(), SizedBox(width: 10), deleteAction()],
+        actions: <Widget>[
+          FlatButton(
+            shape: CircleBorder(),
+            child: Text('Save'),
+            onPressed: () {
+              print("Is this a new document? : $isDocumentNew");
+              Tests content = Tests(
+                  question: _questionCtrl.text,
+                  choices: choices,
+                  answer: answer);
+              // isDocumentNew
+              _addToDatabase(content);
+              // : _updateData(widget.existingData);
+            },
+          )
+        ],
         bottom: TabBar(
           controller: _controller,
           tabs: <Widget>[
@@ -76,51 +89,65 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
       ),
       body: TabBarView(
         controller: _controller,
-        children: <Widget>[editorTab(context), preview(context)],
+        children: <Widget>[TesteditorTab(context), preview(context)],
       ),
       //TODO: fix this
       // floatingActionButton: editingActions(),
     );
   }
 
-  Widget saveAction() {
-    return IconButton(
-      icon: Icon(Icons.save),
-      onPressed: () {
-        print("Is this a new document? : $isDocumentNew");
-
-        Content newContent = Content(
-            name: title, content: content, test: false, position: position);
-        isDocumentNew ? _addToDatabase(newContent) : _updateData(newContent);
-      },
+  Widget editingActions() {
+    return Container(
+      height: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Container(
+            height: 40,
+            child: FloatingActionButton(
+              backgroundColor: Colors.white,
+              elevation: 2,
+              child: Icon(Icons.edit, color: Colors.blue),
+              onPressed: () {
+                _contentCtrl.text +=
+                    "\n## ![Flutter logo](https://cdn-images-1.medium.com/max/1600/1*6xT0ZOACZCdy_61tTJ3r1Q.png)";
+              },
+            ),
+          ),
+          Container(
+            height: 40,
+            child: FloatingActionButton(
+              backgroundColor: Colors.white,
+              elevation: 2,
+              child: Icon(
+                Icons.image,
+                color: Colors.green,
+              ),
+              onPressed: () {
+                _contentCtrl.text +=
+                    "\n## ![Flutter logo](https://cdn-images-1.medium.com/max/1600/1*6xT0ZOACZCdy_61tTJ3r1Q.png)";
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget deleteAction() {
-    return IconButton(
-      icon: Icon(Icons.delete_outline),
-      onPressed: () {
-        print("Is this a new document? : $isDocumentNew");
-
-
-        if (!isDocumentNew) _deleteData(widget.existingData.reference);
-      },
-    );
-  }
-
-  Widget editorTab(BuildContext context) {
+  Widget TesteditorTab(BuildContext context) {
     BoxDecoration decoration = BoxDecoration(
         color: Colors.grey[100],
         border: Border.all(color: Colors.grey[200], width: 1),
         borderRadius: BorderRadius.circular(2));
 
+    
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10),
       child: ListView(
         children: [
           SizedBox(height: 20),
           Text(
-            'Title',
+            'Question',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           Container(
@@ -131,12 +158,13 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
               maxLines: null,
               autocorrect: true,
               textCapitalization: TextCapitalization.words,
-              controller: _titleCtrl,
+              controller: _questionCtrl,
               decoration: InputDecoration(
-                  border: InputBorder.none, hintText: 'Enter your title here'),
+                  border: InputBorder.none,
+                  hintText: 'Enter your question here'),
               onChanged: (String text) {
                 setState(() {
-                  title = text;
+                  question = text;
                 });
               },
             ),
@@ -156,12 +184,12 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
                     maxLines: 1,
                     autocorrect: true,
                     textCapitalization: TextCapitalization.words,
-                    controller: _posCtrl,
+                    controller: answerCtrl,
                     decoration: InputDecoration(
                         border: InputBorder.none, hintText: 'Order'),
                     onChanged: (String text) {
                       setState(() {
-                        position = int.parse(_posCtrl.text);
+                        answer = text as int;
                       });
                     },
                   ),
@@ -187,7 +215,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
                   hintText: 'The rest of the content goes here'),
               onChanged: (String text) {
                 setState(() {
-                  content = text;
+                  choices.add(text);
                 });
               },
             ),
@@ -198,49 +226,32 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
   }
 
   Widget preview(BuildContext context) {
-    return ListView(padding: EdgeInsets.all(10), children: [
-      new MarkdownBody(data: '# $title \n$content'),
-    ]);
+    return ListView(padding: EdgeInsets.all(10), children: [new Container()]);
   }
 
-  Future<void> _addToDatabase(Content content) {
+  Future<void> _addToDatabase(Tests tests) {
     return Firestore.instance.runTransaction((Transaction transaction) async {
+      tests.reference.path;
       CollectionReference reference =
-          widget.data.reference.collection('content');
+          widget.existingData.reference.collection('tests');
+      
 
       await reference.add({
-        "name": content.name,
-        "content": content.content,
-        "position": content.position,
-        "test": content.test,
-      }).whenComplete(() {
-        Navigator.pop(context);
+        "question": tests.question,
+        "choices": tests.choices,
+        "answer": tests.answer,
       });
     });
   }
 
-  Future<void> _updateData(Content content) {
-    return Firestore.instance.runTransaction(
-      (Transaction transaction) async {
-        DocumentReference reference = widget.existingData.reference;
-
-        await reference.updateData({
-          "name": content.name,
-          "content": content.content,
-          "position": content.position,
-          "test": content.test,
-        }).whenComplete(() {
-          Navigator.pop(context);
-        });
-      },
-    );
-  }
-
-  Future<void> _deleteData(DocumentReference reference) {
+  Future<void> _updateData(Tests tests) {
     return Firestore.instance.runTransaction((Transaction transaction) async {
-      await transaction.delete(reference)
-      .whenComplete(() {
-        Navigator.pop(context);
+      DocumentReference reference = tests.reference;
+
+      await reference.updateData({
+        "question": tests.question,
+        "choices": tests.choices,
+        "answer": tests.answer,
       });
     });
   }

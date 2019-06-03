@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/src/ui/editor.dart';
 import '../models/content.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
@@ -15,16 +16,29 @@ class TabContents extends StatelessWidget {
     double fullWidth = MediaQuery.of(context).size.width;
     return Container(
       width: fullWidth,
-      child: ListView(children: [
-        Card(
+      child: ListView(
+        children: [
+          Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(2))),
             margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-            child: Container(
+            child: FlatButton(
+              padding: EdgeInsets.all(0),
+              onPressed: () {
+                Navigator.push(context,
+                MaterialPageRoute(
+                  builder: (context) => Editor(existingData: content)
+                ));
+              },
+              child: Container(
                 // width: fullWidth,
                 padding: EdgeInsets.all(4),
-                child: contentItem(context, content))),
-      ]),
+                child: contentItem(context, content),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

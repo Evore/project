@@ -85,22 +85,22 @@ class _ContentTabsState extends State<ContentTabs> {
         appBar: new PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: Container(
-              color: Colors.blue,
+              color: Colors.blueGrey[700],
               child: Column(
                 children: [
                 Expanded(
                   child: Container(),
                 ),
                 TabBar(
-                  indicatorColor: Colors.grey[600],
+                  indicatorColor: Colors.grey[400],
                   tabs: List<Widget>.generate(
                     length,
                     (int index) {
                       Content item = items[index];
                       return Tab(
                           icon: item.test
-                              ? Icon(Icons.assignment)
-                              : Icon(Icons.book));
+                              ? Icon(Icons.assignment, size: 20,)
+                              : Icon(Icons.book, size: 20));
                     },
                   ),
                 ),
@@ -120,6 +120,8 @@ class _ContentTabsState extends State<ContentTabs> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor:  Colors.blueGrey[700],
+          mini: true,
           child: Icon(Icons.add),
           onPressed: () {
             Navigator.push(

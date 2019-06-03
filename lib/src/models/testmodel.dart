@@ -1,12 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum TestType {
-  MCQ,
-  FILL_IN,
-}
-
 class Tests {
-  Tests({this.question, this.choices, this.reference});
+  Tests({this.question, this.choices, this.reference, this.answer});
   String question;
   int answer;
   List choices;

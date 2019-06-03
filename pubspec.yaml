@@ -28,6 +28,7 @@ dependencies:
   sqflite: ^1.1.0
   path_provider: any
   flutter_markdown: 0.2.0
+  sliding_up_panel: ^0.3.4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

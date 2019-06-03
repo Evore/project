@@ -31,7 +31,7 @@ class _ItemState extends State<Item> {
           style: TextStyle(fontSize: 16),
         ),
         backgroundColor: Colors.white,
-        elevation: 5,
+        elevation: 2,
         leading: IconButton(
           iconSize: 18,
             icon: Icon(Icons.arrow_back_ios, ),

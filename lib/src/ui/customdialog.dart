@@ -43,8 +43,8 @@ class _CustomDialogState extends State<CustomDialog> {
   Widget buildTitle() {
     //TODO check overflow
     String trunc(String text) {
-      if (text.length > 32) {
-        text = text.substring(0, 30) + '...';
+      if (text.length > 35) {
+        text = text.substring(0, 37) + '...';
       }
       return text;
     }
