@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project/src/models/testmodel.dart';
 import '../models/record.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 class TestEditor extends StatefulWidget {
   TestEditor({this.existingData});
@@ -47,7 +46,6 @@ class _TestEditorState extends State<TestEditor>
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.grey),
         backgroundColor: Colors.white,
-        //TODO make the title dynamic
 
         title: Text(
           isDocumentNew ? 'TestEditor' : widget.existingData.question,
@@ -89,7 +87,7 @@ class _TestEditorState extends State<TestEditor>
       ),
       body: TabBarView(
         controller: _controller,
-        children: <Widget>[TesteditorTab(context), preview(context)],
+        children: <Widget>[testeditorTab(context), preview(context)],
       ),
       //TODO: fix this
       // floatingActionButton: editingActions(),
@@ -134,7 +132,7 @@ class _TestEditorState extends State<TestEditor>
     );
   }
 
-  Widget TesteditorTab(BuildContext context) {
+  Widget testeditorTab(BuildContext context) {
     BoxDecoration decoration = BoxDecoration(
         color: Colors.grey[100],
         border: Border.all(color: Colors.grey[200], width: 1),

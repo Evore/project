@@ -3,12 +3,18 @@ import 'package:project/src/ui/editor.dart';
 import '../models/content.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-class TabContents extends StatelessWidget {
+class TabContents extends StatefulWidget {
   TabContents({this.content});
   final Content content;
 
+  TabContentsState createState() => TabContentsState();
+}
+
+class TabContentsState extends State<TabContents> {
+  Content content;
   @override
   Widget build(BuildContext context) {
+    content = widget.content;
     return contents(context, content);
   }
 
@@ -25,10 +31,10 @@ class TabContents extends StatelessWidget {
             child: FlatButton(
               padding: EdgeInsets.all(0),
               onPressed: () {
-                Navigator.push(context,
-                MaterialPageRoute(
-                  builder: (context) => Editor(existingData: content)
-                ));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Editor(existingData: content)));
               },
               child: Container(
                 // width: fullWidth,
@@ -62,4 +68,12 @@ class TabContents extends StatelessWidget {
       ),
     ]);
   }
+
+  // Widget forumContainer() {
+  //   return ListView(
+  //     children: <Widget>[
+  //       Foru
+  //     ],
+  //   );
+  // }
 }

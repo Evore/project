@@ -2,7 +2,9 @@ library tabcontent;
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project/src/ui/forum.dart';
 import 'package:project/src/ui/testsui.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../models/content.dart';
 import '../models/record.dart';
 import 'editor.dart';
@@ -86,8 +88,7 @@ class _ContentTabsState extends State<ContentTabs> {
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: Container(
               color: Colors.blueGrey[700],
-              child: Column(
-                children: [
+              child: Column(children: [
                 Expanded(
                   child: Container(),
                 ),
@@ -99,13 +100,15 @@ class _ContentTabsState extends State<ContentTabs> {
                       Content item = items[index];
                       return Tab(
                           icon: item.test
-                              ? Icon(Icons.assignment, size: 20,)
+                              ? Icon(
+                                  Icons.assignment,
+                                  size: 20,
+                                )
                               : Icon(Icons.book, size: 20));
                     },
                   ),
                 ),
-                ]
-              ),
+              ]),
             )),
         backgroundColor: Colors.grey[100],
         body: TabBarView(
@@ -114,13 +117,13 @@ class _ContentTabsState extends State<ContentTabs> {
             (int index) {
               Content content = items[index];
               return content.test 
-              ? TestContents(reference: content.reference,)
+              ? TestContents(reference: content.reference)
               : TabContents(content: content);
             },
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor:  Colors.blueGrey[700],
+          backgroundColor: Colors.blueGrey[700],
           mini: true,
           child: Icon(Icons.add),
           onPressed: () {
@@ -133,6 +136,31 @@ class _ContentTabsState extends State<ContentTabs> {
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Widget sliderFrame(Content content) {
+    return SlidingUpPanel(
+      // padding: EdgeInsets.only(top: 40),
+      minHeight: 40,
+      // parallaxEnabled: true,
+      backdropEnabled: true,
+      backdropColor: Colors.grey,
+      panel: Forum(ref: content.reference),
+      body: content.test
+          ? TestContents(reference: content.reference)
+          : TabContents(content: content),
+      collapsed: Container(
+        decoration: BoxDecoration(
+          color: Colors.blueGrey,
+        ),
+        child: Center(
+          child: Text(
+            "This is the collapsed Widget",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
     );

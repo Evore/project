@@ -187,12 +187,6 @@ class _SubjectWidgetState extends State<SubjectWidget> {
     return MaterialButton(
       padding: EdgeInsets.all(isPortrait ? 2 : 4),
       onPressed: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => Item(
-        //               subject: data,
-        //             ),));
         showDialog(
           context: context,
           builder: (BuildContext context) => CustomDialog(

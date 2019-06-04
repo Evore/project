@@ -40,11 +40,6 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
     }
   }
 
-  Content newConten(String name, String content, bool test, int position) {
-    return new Content(
-        name: name, content: content, test: test, position: position);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

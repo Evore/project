@@ -106,11 +106,6 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget buildList(BuildContext context, List<dynamic> snapshot) {
-    // bool isPortrait;
-    // if (MediaQuery.of(context).orientation == Orientation.landscape) {
-    //   isPortrait = false;
-    // } else
-    //   isPortrait = true;
 
     return Container(
       padding: EdgeInsets.only(bottom: 10, top: 0),
@@ -152,12 +147,6 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget buildCList(BuildContext context, List<dynamic> snapshot) {
-    // bool isPortrait;
-    // if (MediaQuery.of(context).orientation == Orientation.landscape) {
-    //   isPortrait = false;
-    // } else
-    //   isPortrait = true;
-
     return Container(
       padding: EdgeInsets.only(bottom: 10, top: 0),
       child: ListView(
