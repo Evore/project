@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/src/ui/editor.dart';
+import 'package:project/src/ui/forum.dart';
 import '../models/content.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
@@ -68,12 +69,300 @@ class TabContentsState extends State<TabContents> {
       ),
     ]);
   }
-
-  // Widget forumContainer() {
-  //   return ListView(
-  //     children: <Widget>[
-  //       Foru
-  //     ],
-  //   );
-  // }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// bool clicked = false;
+// double collapsedHeight = 50;
+// double expandedHeight;
+
+// Widget forumContainer() {
+//   expandedHeight = MediaQuery.of(context).size.height - 80;
+//   return Positioned(
+//     bottom: 0,
+//     child: Container(
+//         width: MediaQuery.of(context).size.width,
+//         height: clicked ? expandedHeight : collapsedHeight,
+//         color: Colors.amber,
+//         child: Column(
+//           children: <Widget>[
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: <Widget>[
+//                 IconButton(
+//                   icon: clicked
+//                       ? Icon(Icons.arrow_drop_down)
+//                       : Icon(Icons.arrow_drop_up),
+//                   onPressed: () {
+//                     setState(() {
+//                       clicked = !clicked;
+//                     });
+//                   },
+//                 ),
+//                 Text('Forum'),
+//                 SizedBox(width: 50)
+//               ],
+//             ),
+//             clicked
+//                 ? Container(
+//                     height: expandedHeight - collapsedHeight, child: Forum(ref: widget.content.reference))
+//                 : Container()
+//           ],
+//         )),
+//   );
+// }

@@ -87,13 +87,13 @@ class _ContentTabsState extends State<ContentTabs> {
         appBar: new PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: Container(
-              color: Colors.blueGrey[700],
+              color: Colors.blue,
               child: Column(children: [
                 Expanded(
                   child: Container(),
                 ),
                 TabBar(
-                  indicatorColor: Colors.grey[400],
+                  indicatorColor: Colors.white,
                   tabs: List<Widget>.generate(
                     length,
                     (int index) {
@@ -116,14 +116,12 @@ class _ContentTabsState extends State<ContentTabs> {
             length,
             (int index) {
               Content content = items[index];
-              return content.test 
-              ? TestContents(reference: content.reference)
-              : TabContents(content: content);
+              return sliderFrame(content);
             },
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blueGrey[700],
+          backgroundColor: Color(0xffff4455),
           mini: true,
           child: Icon(Icons.add),
           onPressed: () {
@@ -145,7 +143,7 @@ class _ContentTabsState extends State<ContentTabs> {
     return SlidingUpPanel(
       // padding: EdgeInsets.only(top: 40),
       minHeight: 40,
-      // parallaxEnabled: true,
+      parallaxEnabled: true,
       backdropEnabled: true,
       backdropColor: Colors.grey,
       panel: Forum(ref: content.reference),
@@ -154,7 +152,7 @@ class _ContentTabsState extends State<ContentTabs> {
           : TabContents(content: content),
       collapsed: Container(
         decoration: BoxDecoration(
-          color: Colors.blueGrey,
+          color: Colors.blue[300],
         ),
         child: Center(
           child: Text(

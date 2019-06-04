@@ -1,9 +1,9 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ForumData {
+  ForumData({this.sender, this.message});
   final String sender, message;
-  final DocumentReference reference;
+  DocumentReference reference;
 
   ForumData.fromMap(Map<String, dynamic> map, {this.reference})
       : sender = map['sender'],
