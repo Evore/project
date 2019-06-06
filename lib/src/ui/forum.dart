@@ -248,8 +248,7 @@ class _FurtherReplyState extends State<FurtherReply> {
   Widget build(BuildContext context) {
     return fetchreplies(widget.data);
   }
-
-  @override
+  
   fetchreplies(ForumData data) {
     DocumentReference ref = data.reference;
     return StreamBuilder<QuerySnapshot>(

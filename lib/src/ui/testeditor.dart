@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project/src/models/testmodel.dart';
+import 'package:project/src/ui/testsui.dart';
+import 'package:toast/toast.dart';
 import '../models/record.dart';
 
 class TestEditor extends StatefulWidget {
@@ -34,6 +36,7 @@ class _TestEditorState extends State<TestEditor>
     if (widget.existingData != null) {
       isDocumentNew = false;
       _questionCtrl.text = widget.existingData.question;
+      answerCtrl.text = widget.existingData.answer.toString();
       choices = widget.existingData.choices;
     }
   }
@@ -63,9 +66,7 @@ class _TestEditorState extends State<TestEditor>
                   question: _questionCtrl.text,
                   choices: choices,
                   answer: answer);
-              isDocumentNew ?
-              _addToDatabase(content)
-              : _updateData(content);
+              isDocumentNew ? _addToDatabase(content) : _updateData(content);
             },
           )
         ],
@@ -136,7 +137,7 @@ class _TestEditorState extends State<TestEditor>
 
   Widget testeditorTab(BuildContext context) {
     return ListView(
-       padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       children: [
         SizedBox(height: 20),
         Text(
@@ -153,8 +154,7 @@ class _TestEditorState extends State<TestEditor>
             textCapitalization: TextCapitalization.words,
             controller: _questionCtrl,
             decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Enter your question here'),
+                border: InputBorder.none, hintText: 'Enter your question here'),
             onChanged: (String text) {
               setState(() {
                 question = text;
@@ -179,11 +179,26 @@ class _TestEditorState extends State<TestEditor>
                   textCapitalization: TextCapitalization.words,
                   controller: answerCtrl,
                   decoration: InputDecoration(
-                      border: InputBorder.none, hintText: 'Order'),
+                      border: InputBorder.none, hintText: 'Answer number'),
                   onChanged: (String text) {
-                    setState(() {
-                      answer = text as int;
-                    });
+                    int num = int.parse(text);
+                    if (num > choices.length) {
+                      Toast.show(
+                          "Please select a number within the range of choices provided",
+                          context,
+                          duration: 2,
+                          gravity: Toast.CENTER,
+                          backgroundColor: Colors.blue.shade400,
+                          backgroundRadius: 4);
+                      setState(() {
+                        answerCtrl.text = choices.length.toString();
+                        answer = choices.length;
+                      });
+                    } else {
+                      setState(() {
+                        answer = int.parse(text);
+                      });
+                    }
                   },
                 ),
               ),
@@ -221,7 +236,7 @@ class _TestEditorState extends State<TestEditor>
               icon: Icon(Icons.delete),
               onPressed: () {
                 setState(() {
-                  choices.removeAt(index-1);
+                  choices.removeAt(index - 1);
                 });
               })
         ],
@@ -255,7 +270,7 @@ class _TestEditorState extends State<TestEditor>
         IconButton(
             icon: Icon(Icons.add_circle_outline),
             onPressed: () {
-              if (choice!=null)
+              if (choice != null)
                 setState(() {
                   choices.add(choice);
                   _contentCtrl.clear();
@@ -266,7 +281,11 @@ class _TestEditorState extends State<TestEditor>
   }
 
   Widget preview(BuildContext context) {
-    return ListView(padding: EdgeInsets.all(10), children: [new Container()]);
+    return ListView(padding: EdgeInsets.all(10), children: [TestSection(
+      test: Tests(question: _questionCtrl.text,
+                  choices: choices,
+                  answer: answer)
+    )]);
   }
 
   Future<void> _addToDatabase(Tests tests) {
@@ -279,6 +298,12 @@ class _TestEditorState extends State<TestEditor>
         "question": tests.question,
         "choices": tests.choices,
         "answer": tests.answer,
+      }).catchError((error) {
+        Toast.show(error.toString(), context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+      }).whenComplete(() {
+        Toast.show("Successfully added", context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       });
     });
   }
@@ -291,8 +316,12 @@ class _TestEditorState extends State<TestEditor>
         "question": tests.question,
         "choices": tests.choices,
         "answer": tests.answer,
-      }).catchError((error){
-        print(error);
+      }).whenComplete(() {
+        Toast.show("Successfully added", context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+      }).catchError((error) {
+        Toast.show(error.toString(), context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       });
     });
   }

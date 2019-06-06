@@ -2,6 +2,7 @@ library tabcontent;
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project/src/models/lessonsdata.dart';
 import 'package:project/src/ui/forum.dart';
 import 'package:project/src/ui/testsui.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -12,7 +13,7 @@ import 'tabsui.dart';
 
 class ContentTabs extends StatefulWidget {
   ContentTabs({this.calldata});
-  final Record calldata;
+  final Lesson calldata;
   _ContentTabsState createState() => _ContentTabsState();
 }
 

@@ -31,7 +31,7 @@ class TestContents extends StatelessWidget {
     List<Tests> items =
         snapshots.map((data) => Tests.fromSnapshot(data)).toList();
 
-    return items.isNotEmpty ? contents(context, items) : Container();
+    return contents(context, items);
   }
 
   Widget contents(BuildContext context, List<Tests> items) {

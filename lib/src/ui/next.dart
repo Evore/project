@@ -5,9 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../models/subjectdata.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../models/lessonsdata.dart';
 
+import 'entrydialog.dart';
 import 'tabs.dart' as l1;
-import '../models/record.dart';
 
 class Item extends StatefulWidget {
   Item({this.subject});
@@ -18,6 +19,8 @@ class Item extends StatefulWidget {
 class _ItemState extends State<Item> {
   bool isPortrait;
   bool open = false;
+  bool editingState = false;
+  String name = '';
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +33,40 @@ class _ItemState extends State<Item> {
           'Learn',
           style: TextStyle(fontSize: 16),
         ),
+        actions: <Widget>[addNew()],
         backgroundColor: Colors.white,
-        elevation: 2,
+        elevation: 1,
         leading: IconButton(
-          iconSize: 18,
-            icon: Icon(Icons.arrow_back_ios, ),
+            iconSize: 20,
+            icon: Icon(
+              Icons.arrow_back,
+            ),
             tooltip: 'Back',
             onPressed: () {
               Navigator.pop(context);
             }),
       ),
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.blueGrey[50],
       body: _buildBody(context),
+    );
+  }
+
+  Widget addNew() {
+    return IconButton(
+      tooltip: 'Add New',
+      icon: Icon(
+        Icons.add,
+        size: 21,
+      ),
+      onPressed: () {
+        CollectionReference ref =
+            widget.subject.reference.collection("submodules");
+        print(ref.path);
+        showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) => EntryDialog(ref: ref));
+      },
     );
   }
 
@@ -49,7 +74,7 @@ class _ItemState extends State<Item> {
     DocumentReference ref = widget.subject.reference;
     // get actual snapshot from Cloud Firestore
     return StreamBuilder<QuerySnapshot>(
-      stream: ref.collection("submodules").snapshots(),
+      stream: ref.collection("submodules").orderBy('position').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
@@ -86,11 +111,11 @@ class _ItemState extends State<Item> {
   }
 
   Widget makeBody(BuildContext context, DocumentSnapshot data) {
-    Record record = Record.fromSnapshot(data);
-    return makeCard(record);
+    Lesson lesson = Lesson.fromSnapshot(data);
+    return makeCard(lesson);
   }
 
-  Widget makeCard(Record record) {
+  Widget makeCard(Lesson lesson) {
     return Container(
       margin: new EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
@@ -106,11 +131,11 @@ class _ItemState extends State<Item> {
           )
         ],
       ),
-      child: myListTile(record),
+      child: myListTile(lesson),
     );
   }
 
-  Widget myListTile(Record record) {
+  Widget myListTile(Lesson lesson) {
     return RaisedButton(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       elevation: 0,
@@ -131,7 +156,7 @@ class _ItemState extends State<Item> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    record.name,
+                    lesson.name,
                     style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey[800],
@@ -155,7 +180,7 @@ class _ItemState extends State<Item> {
             context,
             MaterialPageRoute(
               builder: (context) => l1.ContentTabs(
-                    calldata: record,
+                    calldata: lesson,
                   ),
             ));
       },

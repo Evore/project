@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project/src/models/lessonsdata.dart';
 import '../models/content.dart';
 import '../models/record.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class Editor extends StatefulWidget {
   Editor({this.data, this.existingData});
-  final Record data;
+  final Lesson data;
   final Content existingData;
   _EditorState createState() => _EditorState();
 }
@@ -19,7 +20,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
   String title = '';
   String content = '';
   int position = 0;
-  bool test = true;
+  bool test;
 
   @override
   void initState() {
@@ -73,8 +74,6 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
         controller: _controller,
         children: <Widget>[editorTab(context), preview(context)],
       ),
-      //TODO: fix this
-      // floatingActionButton: editingActions(),
     );
   }
 
@@ -85,7 +84,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
         print("Is this a new document? : $isDocumentNew");
 
         Content newContent = Content(
-            name: title, content: content, test: false, position: position);
+            name: title, content: content, test: test, position: position);
         isDocumentNew ? _addToDatabase(newContent) : _updateData(newContent);
       },
     );

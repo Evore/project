@@ -30,17 +30,20 @@ class _CustomDialogState extends State<CustomDialog> {
           Radius.circular(3),
         ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min, // To make the card compact
-        children: <Widget>[
-          buildTitle(),
-          getParent(context),
-        ],
+      child: Scaffold(
+        appBar: AppBar(
+            leading: null,
+            automaticallyImplyLeading: false,
+            title: buildTitle(widget.subject.name)),
+        body: ListView(
+          shrinkWrap: true, // To make the card compact
+          children: <Widget>[getParent(context)],
+        ),
       ),
     );
   }
 
-  Widget buildTitle() {
+  Text buildTitle(String text) {
     //TODO check overflow
     String trunc(String text) {
       if (text.length > 35) {
@@ -49,34 +52,13 @@ class _CustomDialogState extends State<CustomDialog> {
       return text;
     }
 
-    return Container(
-      padding: EdgeInsets.all(13),
-      decoration: BoxDecoration(
-        color: Colors.blue[400],
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x33000000),
-            blurRadius: 0.0,
-            spreadRadius: 0.0,
-            offset: Offset(0, 1),
-          ),
-        ],
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(3),
-        ),
-      ),
-      child: Row(
-        children: <Widget>[
-          Text(
-            trunc(widget.subject.name),
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
+    return Text(
+      trunc(text),
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.white,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
@@ -106,7 +88,6 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget buildList(BuildContext context, List<dynamic> snapshot) {
-
     return Container(
       padding: EdgeInsets.only(bottom: 10, top: 0),
       child: ListView(
