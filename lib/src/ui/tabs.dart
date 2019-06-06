@@ -121,7 +121,7 @@ class _ContentTabsState extends State<ContentTabs> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xffff4455),
+          backgroundColor: Color(0xffff3344),
           mini: true,
           child: Icon(Icons.add),
           onPressed: () {
@@ -139,10 +139,16 @@ class _ContentTabsState extends State<ContentTabs> {
     );
   }
 
+  double maxHeight(){
+    double portHeight = MediaQuery.of(context).size.height;
+    portHeight -= 80;
+    return portHeight;
+  }
   Widget sliderFrame(Content content) {
     return SlidingUpPanel(
       // padding: EdgeInsets.only(top: 40),
       minHeight: 40,
+      maxHeight: maxHeight(),
       parallaxEnabled: true,
       backdropEnabled: true,
       backdropColor: Colors.grey,

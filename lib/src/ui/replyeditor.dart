@@ -13,7 +13,6 @@ class Reply extends StatefulWidget {
 }
 
 class ReplyState extends State<Reply> {
-  FirebaseAuth auth = FirebaseAuth.instance;
   String message, sender;
   DocumentReference reference;
   TextEditingController controller = TextEditingController();
@@ -89,6 +88,24 @@ class ReplyState extends State<Reply> {
       ),
     );
   }
+
+
+  // Future<void> _updateData(ForumData reply) {
+  //   return Firestore.instance.runTransaction(
+  //     (Transaction transaction) async {
+  //       DocumentReference reference = widget.existingData.reference;
+
+  //       await reference.updateData({
+  //         "name": content.name,
+  //         "content": content.content,
+  //         "position": content.position,
+  //         "test": content.test,
+  //       }).whenComplete(() {
+  //         Navigator.pop(context);
+  //       });
+  //     },
+  //   );
+
 
   Future<void> _addToDatabase(ForumData reply) {
     return Firestore.instance.runTransaction((Transaction transaction) async {

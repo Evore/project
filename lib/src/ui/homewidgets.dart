@@ -40,11 +40,11 @@ class _SemesterWidgetState extends State<SemesterWidget> {
   }
 
   Widget buildList(BuildContext context, List<dynamic> snapshot) {
-    return Container(
+    return Container( 
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [Colors.blue.shade500, Colors.red.shade300],
-          stops: [0.4, 1],
+          stops: [0.1, 0.9],
         ),
       ),
       child: Stack(

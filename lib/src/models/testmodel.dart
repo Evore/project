@@ -4,7 +4,7 @@ class Tests {
   Tests({this.question, this.choices, this.reference, this.answer});
   String question;
   int answer;
-  List choices;
+  List<String> choices;
   DocumentReference reference;
 
   Tests.fromMap(Map<String, dynamic> map, {this.reference})

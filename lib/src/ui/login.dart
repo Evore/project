@@ -1,5 +1,6 @@
 library login;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -20,11 +21,6 @@ class _LoginPageState extends State<LoginPage> {
   String email, password;
   bool isloading = false;
 
-  Future<FirebaseUser> login(String email, String password) async {
-    return await _auth.signInWithEmailAndPassword(
-        email: email, password: password);
-  }
-
   Future<bool> sendVerification(FirebaseUser user) async {
     //might not need to use this method, but for posterity...
     bool result;
@@ -42,6 +38,10 @@ class _LoginPageState extends State<LoginPage> {
       print('NOT CONNECTED!!!!');
     }
     return result;
+  }
+
+  void getUserData(){
+    Future<QuerySnapshot>  aa = Firestore.instance.collection('users').where('email', isEqualTo: email).getDocuments();
   }
 
   @override
@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(height: 16.0),
           Container(
             child: Text(
-              'SHRINE',
+              'LOGIN',
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 23,
@@ -123,50 +123,48 @@ class _LoginPageState extends State<LoginPage> {
   Widget buttonBar(BuildContext context) {
     return Column(
       children: <Widget>[
-        RaisedButton(
-            color: Colors.grey[900],
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(40))),
-            child: Padding(
-                padding: isloading
-                    ? EdgeInsets.all(12)
-                    : EdgeInsets.symmetric(vertical: 12, horizontal: 70),
-                child: isloading
-                    ? CircularProgressIndicator()
-                    : Text('Next',
+        isloading
+            ? CircularProgressIndicator()
+            : RaisedButton(
+                color: Colors.grey[900],
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(40))),
+                child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 70),
+                    child: Text('Next',
                         style: TextStyle(
                             color: Colors.grey[200],
                             fontSize: 16,
                             fontWeight: FontWeight.w600))),
-            onPressed: () {
-              try {
-                setState(() {
-                  isloading = true;
-                });
-                _auth
-                    .signInWithEmailAndPassword(
-                        email: _usernameController.text,
-                        password: _passwordController.text)
-                    .then((user) {
-                  if (user != null) {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Home()));
-                  } else {
+                onPressed: () {
+                  try {
+                    setState(() {
+                      isloading = true;
+                    });
+                    _auth
+                        .signInWithEmailAndPassword(
+                            email: _usernameController.text,
+                            password: _passwordController.text)
+                        .then((user) {
+                      if (user != null) {
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => Home()));
+                      } else {
+                        setState(() {
+                          isloading = false;
+                        });
+                      }
+                    }).catchError((e) {
+                      print(e);
+                    });
+                  } catch (error) {
                     setState(() {
                       isloading = false;
                     });
+                    print("THE ERROR IS: " + error.toString());
                   }
-                }).catchError((e) {
-                  print(e);
-                });
-              } catch (error) {
-                setState(() {
-                  isloading = false;
-                });
-                print("THE ERROR IS: " + error.toString());
-              }
-            }),
+                }),
         SizedBox(height: 10),
         FlatButton(child: Text('Forgot password?'), onPressed: () {})
       ],

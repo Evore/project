@@ -19,7 +19,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
   String title = '';
   String content = '';
   int position = 0;
-  bool test = false;
+  bool test = true;
 
   @override
   void initState() {
@@ -142,7 +142,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  width: 150,
+                  width: 100,
                   margin: EdgeInsets.fromLTRB(0, 5, 20, 15),
                   decoration: decoration,
                   padding: EdgeInsets.symmetric(horizontal: 8),
@@ -173,6 +173,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
             decoration: decoration,
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: TextField(
+              minLines: 2,
               maxLines: 17,
               autocorrect: true,
               textCapitalization: TextCapitalization.sentences,
