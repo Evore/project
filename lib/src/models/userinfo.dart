@@ -20,6 +20,6 @@ class User {
   String toString() => "User<$name:";
 }
 
-class Details {
-  static String email;
+class UserDetails {
+  static User user;
 }

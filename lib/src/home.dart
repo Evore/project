@@ -3,6 +3,7 @@ library home;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:project/src/ui/utils/custompopupwidget.dart';
 import 'ui/homewidgets.dart';
 
 double pHeight, lHeight;
@@ -27,12 +28,57 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  CustomPopupMenu _selectedChoice;
+
+  initState() {
+    super.initState();
+  }
+
+  List<CustomPopupMenu> choices = <CustomPopupMenu>[
+    CustomPopupMenu(title: 'Logout', icon: Icons.person),
+  ];
+
+  void _select(CustomPopupMenu choice) {
+    setState(() {
+      _selectedChoice = choice;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(elevation: 3, backgroundColor: Colors.blue.shade600,
-      // title: Text('Project Name'),),
-      body: _buildBody(context),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue.shade500, Colors.red.shade300],
+          stops: [0.1, 0.9],
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          title: Text('Project Name'),
+          actions: <Widget>[
+            PopupMenuButton<CustomPopupMenu>(
+              icon: Icon(Icons.menu),
+              elevation: 4,
+              initialValue: choices[0],
+              tooltip: 'Menu',
+              onSelected: _select,
+              itemBuilder: (BuildContext context) {
+                return choices.map((CustomPopupMenu choice) {
+                  return PopupMenuItem<CustomPopupMenu>(
+                    value: choice,
+                    child: Text(choice.title),
+                  );
+                }).toList();
+              },
+            )
+          ],
+        ),
+        body: _buildBody(context),
+      ),
     );
   }
 

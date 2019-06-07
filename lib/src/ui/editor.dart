@@ -20,7 +20,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
   String title = '';
   String content = '';
   int position = 0;
-  bool test;
+  bool test = false;
 
   @override
   void initState() {

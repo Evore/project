@@ -40,24 +40,15 @@ class _SemesterWidgetState extends State<SemesterWidget> {
   }
 
   Widget buildList(BuildContext context, List<dynamic> snapshot) {
-    return Container( 
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.blue.shade500, Colors.red.shade300],
-          stops: [0.1, 0.9],
-        ),
-      ),
-      child: Stack(
-        children: <Widget>[
-          ListView(
-            scrollDirection: Axis.vertical,
-            padding: EdgeInsets.only(top: 20),
-            children: snapshot
-                .map(
-                  (data) => _buildListItem(context, data),
-                ).toList(),
-          ),
-        ],
+    return Container(
+      child: ListView(
+        scrollDirection: Axis.vertical,
+        padding: EdgeInsets.only(top: 10),
+        children: snapshot
+            .map(
+              (data) => _buildListItem(context, data),
+            )
+            .toList(),
       ),
     );
   }
@@ -150,7 +141,7 @@ class _SubjectWidgetState extends State<SubjectWidget> {
     );
   }
 
-  Widget buildList(BuildContext context, List<dynamic> snapshot) {
+  Widget buildList(BuildContext context, List<dynamic> snapshots) {
     portraitHeight = MediaQuery.of(context).size.width * 0.61;
     landscapeHeight = MediaQuery.of(context).size.width * 0.40;
 
@@ -158,6 +149,8 @@ class _SubjectWidgetState extends State<SubjectWidget> {
       isPortrait = false;
     } else
       isPortrait = true;
+
+    if (snapshots.isEmpty) return Container();
 
     return Container(
       //Todo: try a dropdown list
@@ -168,10 +161,11 @@ class _SubjectWidgetState extends State<SubjectWidget> {
         mainAxisSpacing: 0,
         crossAxisCount: 1,
         scrollDirection: Axis.horizontal,
-        children: snapshot
+        children: snapshots
             .map(
               (data) => _buildListItem(context, data),
-            ).toList(),
+            )
+            .toList(),
       ),
     );
   }

@@ -3,12 +3,11 @@ library tabcontent;
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project/src/models/lessonsdata.dart';
+import 'package:project/src/ui/asktestdialog.dart';
 import 'package:project/src/ui/forum.dart';
 import 'package:project/src/ui/testsui.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../models/content.dart';
-import '../models/record.dart';
-import 'editor.dart';
 import 'tabsui.dart';
 
 class ContentTabs extends StatefulWidget {
@@ -19,6 +18,14 @@ class ContentTabs extends StatefulWidget {
 
 class _ContentTabsState extends State<ContentTabs> {
   double fullWidth;
+
+  CollectionReference ref;
+
+  @override
+  void initState() {
+    super.initState();
+    ref = widget.calldata.reference.collection('content');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +38,8 @@ class _ContentTabsState extends State<ContentTabs> {
   }
 
   Widget fetchData() {
-    DocumentReference ref = widget.calldata.reference;
     return StreamBuilder<QuerySnapshot>(
-      stream: ref.collection('content').orderBy('position').snapshots(),
+      stream: ref.orderBy('position').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
@@ -52,32 +58,7 @@ class _ContentTabsState extends State<ContentTabs> {
     List<Content> items =
         snapshots.map((data) => Content.fromSnapshot(data)).toList();
 
-    return items.isNotEmpty ? body(context, items) : emptySnaps();
-  }
-
-  Widget emptySnaps() {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Nothing to see here yet.',
-                textAlign: TextAlign.center,
-              ),
-              // SizedBox(height: 5),
-              Text(
-                'Feel free to browse other collections in the meanwhile.',
-                textAlign: TextAlign.center,
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+    return body(context, items);
   }
 
   Widget body(BuildContext context, List<Content> items) {
@@ -122,17 +103,15 @@ class _ContentTabsState extends State<ContentTabs> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xffff3344),
+          backgroundColor: Color(0xffff4444),
           mini: true,
           child: Icon(Icons.add),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Editor(
-                      data: widget.calldata,
-                    ),
-              ),
+            showDialog(
+              context: context,
+              builder: (context) => AskTestDialog(
+                    ref: widget.calldata.reference,
+                  ),
             );
           },
         ),
@@ -140,11 +119,12 @@ class _ContentTabsState extends State<ContentTabs> {
     );
   }
 
-  double maxHeight(){
+  double maxHeight() {
     double portHeight = MediaQuery.of(context).size.height;
     portHeight -= 80;
     return portHeight;
   }
+
   Widget sliderFrame(Content content) {
     return SlidingUpPanel(
       // padding: EdgeInsets.only(top: 40),
@@ -159,12 +139,12 @@ class _ContentTabsState extends State<ContentTabs> {
           : TabContents(content: content),
       collapsed: Container(
         decoration: BoxDecoration(
-          color: Colors.blue[300],
+          color: Colors.grey[500],
         ),
         child: Center(
           child: Text(
-            "This is the collapsed Widget",
-            style: TextStyle(color: Colors.white),
+            "Discussion",
+            style: TextStyle(fontSize: 14, color: Colors.white),
           ),
         ),
       ),

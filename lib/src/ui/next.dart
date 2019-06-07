@@ -22,6 +22,15 @@ class _ItemState extends State<Item> {
   bool editingState = false;
   String name = '';
 
+  CollectionReference ref;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ref = widget.subject.reference.collection("submodules");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +55,7 @@ class _ItemState extends State<Item> {
               Navigator.pop(context);
             }),
       ),
-      backgroundColor: Colors.blueGrey[50],
+      backgroundColor: Colors.grey[100],
       body: _buildBody(context),
     );
   }
@@ -59,8 +68,6 @@ class _ItemState extends State<Item> {
         size: 21,
       ),
       onPressed: () {
-        CollectionReference ref =
-            widget.subject.reference.collection("submodules");
         print(ref.path);
         showDialog(
             context: context,
@@ -71,10 +78,9 @@ class _ItemState extends State<Item> {
   }
 
   Widget _buildBody(BuildContext context) {
-    DocumentReference ref = widget.subject.reference;
     // get actual snapshot from Cloud Firestore
     return StreamBuilder<QuerySnapshot>(
-      stream: ref.collection("submodules").orderBy('position').snapshots(),
+      stream: ref.orderBy('position').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
@@ -90,18 +96,11 @@ class _ItemState extends State<Item> {
   }
 
   Widget pageFrame(BuildContext context, List<DocumentSnapshot> snapshots) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: _buildItemPage(snapshots),
-    );
-  }
-
-  Widget _buildItemPage(List<DocumentSnapshot> snapshots) {
     return snapshots.isEmpty
-        ? Center(
-            child: Text('Nothing here yet'),
-          )
+        ? Container()
         : ListView(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            shrinkWrap: true,
             children: snapshots
                 .map(
                   (data) => makeBody(context, data),
@@ -120,7 +119,7 @@ class _ItemState extends State<Item> {
       margin: new EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(
-          Radius.circular(5),
+          Radius.circular(4),
         ),
         boxShadow: [
           BoxShadow(
@@ -139,10 +138,10 @@ class _ItemState extends State<Item> {
     return RaisedButton(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       elevation: 0,
-      color: Colors.grey[50],
+      color: Colors.white,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
-        Radius.circular(3),
+        Radius.circular(4),
       )),
       child: Container(
         child: ConstrainedBox(
@@ -168,9 +167,23 @@ class _ItemState extends State<Item> {
               ),
             ),
             Container(
-              height: 50,
-              width: 50,
-              child: Image.asset('assets/computer.png'),
+              height: 55,
+              width: 55,
+              child: ClipOval(
+                child: lesson.image.isNotEmpty
+                    ? CachedNetworkImage(
+                        fit: BoxFit.fill,
+                        imageUrl: lesson.image,
+                        placeholder: (context, url) =>
+                            new CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            new Icon(Icons.image),
+                      )
+                    : Image.asset(
+                        'assets/computer.png',
+                        fit: BoxFit.fill,
+                      ),
+              ),
             )
           ]),
         ),

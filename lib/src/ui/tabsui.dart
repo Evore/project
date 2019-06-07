@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project/src/ui/editor.dart';
-import 'package:project/src/ui/forum.dart';
 import '../models/content.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
@@ -28,7 +27,7 @@ class TabContentsState extends State<TabContents> {
           Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(2))),
-            margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+            margin: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
             child: FlatButton(
               padding: EdgeInsets.all(0),
               onPressed: () {
@@ -39,7 +38,7 @@ class TabContentsState extends State<TabContents> {
               },
               child: Container(
                 // width: fullWidth,
-                padding: EdgeInsets.all(4),
+                padding: EdgeInsets.all(0),
                 child: contentItem(context, content),
               ),
             ),
@@ -52,18 +51,20 @@ class TabContentsState extends State<TabContents> {
   Widget contentItem(context, Content content) {
     String title = content.name.split('#').last;
     String conts = content.content.replaceAll('\\n', '\n');
-    return Column(children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
       Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         child: Text(
           '$title',
-          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
         ),
       ),
-      Divider(height: 1),
+      // Divider(height: 1),
       Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.all(4),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         color: Colors.grey[100],
         child: MarkdownBody(data: conts),
       ),

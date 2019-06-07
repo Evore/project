@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
@@ -18,19 +20,19 @@ class _CustomDialogState extends State<CustomDialog> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
       color: Colors.transparent,
-      child: dialogContent(context),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: dialogContent(context)),
     );
   }
 
-  dialogContent(BuildContext context) {
+  Widget dialogContent(BuildContext context) {
     return Card(
+      clipBehavior: Clip.antiAlias,
+      margin: null,
       elevation: 6,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(3),
-        ),
-      ),
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
             leading: null,
             automaticallyImplyLeading: false,

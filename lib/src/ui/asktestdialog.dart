@@ -3,27 +3,32 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project/src/models/lessonsdata.dart';
+import 'package:project/src/ui/editor.dart';
 import 'package:toast/toast.dart';
 
-class EntryDialog extends StatefulWidget {
-  EntryDialog({this.ref});
-  final CollectionReference ref;
-  _EntryDialogState createState() => _EntryDialogState();
+class AskTestDialog extends StatefulWidget {
+  AskTestDialog({this.ref});
+  final DocumentReference ref;
+  _AskTestDialogState createState() => _AskTestDialogState();
 }
 
-class _EntryDialogState extends State<EntryDialog> {
-  TextEditingController _nameCtrl, _imageCtrl, _posCtrl;
+class _AskTestDialogState extends State<AskTestDialog> {
+  TextEditingController _nameCtrl, _contentCtrl, _posCtrl;
+
+  CollectionReference reference;
 
   String name = '';
-  String image = '';
+  String content = '';
   int position = 0;
+  bool test = false;
 
   @override
   void initState() {
     super.initState();
     _nameCtrl = TextEditingController();
     _posCtrl = TextEditingController();
-    _imageCtrl = TextEditingController();
+    _contentCtrl = TextEditingController();
+    reference = widget.ref.collection('content');
   }
 
   @override
@@ -36,7 +41,7 @@ class _EntryDialogState extends State<EntryDialog> {
       vPadding = 20;
     } else {
       hPadding = 20;
-      vPadding = 100;
+      vPadding = 110;
     }
 
     return Container(
@@ -48,7 +53,7 @@ class _EntryDialogState extends State<EntryDialog> {
 
   dialogContent(BuildContext context) {
     return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
       child: Card(
         elevation: 6,
         shape: RoundedRectangleBorder(
@@ -57,11 +62,12 @@ class _EntryDialogState extends State<EntryDialog> {
           ),
         ),
         child: Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             leading: null,
             automaticallyImplyLeading: false,
             title: Text(
-              'Add a new Lesson',
+              'Add new content',
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 16,
@@ -73,7 +79,20 @@ class _EntryDialogState extends State<EntryDialog> {
           ),
           body: ListView(
             shrinkWrap: true, // To make the card compact
-            children: <Widget>[entries()],
+            children: <Widget>[
+              entries(),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: FlatButton(
+                  child: Text('Skip', style: TextStyle(color: Colors.blue)),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Editor()));
+                  },
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -108,13 +127,18 @@ class _EntryDialogState extends State<EntryDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 10),
+          Text(
+            'Only fill out these fields if you want to include a quiz. Otherwise, skip this page entirely.',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          ),
           SizedBox(height: 20),
           Text(
             'Title',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 5, 0, 15),
+            margin: EdgeInsets.fromLTRB(0, 3, 0, 15),
             decoration: decoration,
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: TextField(
@@ -123,8 +147,7 @@ class _EntryDialogState extends State<EntryDialog> {
               textCapitalization: TextCapitalization.words,
               controller: _nameCtrl,
               decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Enter the lesson title here'),
+                  border: InputBorder.none, hintText: 'Enter the lesson title'),
               onChanged: (String text) {
                 setState(() {
                   name = text;
@@ -132,53 +155,26 @@ class _EntryDialogState extends State<EntryDialog> {
               },
             ),
           ),
-          Container(
-            padding: EdgeInsets.fromLTRB(0, 5, 0, 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  margin: EdgeInsets.fromLTRB(0, 5, 20, 15),
-                  decoration: decoration,
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    maxLines: 1,
-                    autocorrect: true,
-                    textCapitalization: TextCapitalization.words,
-                    controller: _posCtrl,
-                    decoration: InputDecoration(
-                        border: InputBorder.none, hintText: 'Order'),
-                    onChanged: (String text) {
-                      setState(() {
-                        position = int.parse(_posCtrl.text);
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
           Text(
-            'Image',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            'Position',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 5, 0, 10),
+            width: 100,
+            margin: EdgeInsets.fromLTRB(0, 3, 20, 15),
             decoration: decoration,
-            padding: EdgeInsets.symmetric(horizontal: 6),
+            padding: EdgeInsets.symmetric(horizontal: 8),
             child: TextField(
-              minLines: 1,
-              maxLines: 17,
+              keyboardType: TextInputType.number,
+              maxLines: 1,
               autocorrect: true,
-              textCapitalization: TextCapitalization.sentences,
-              controller: _imageCtrl,
-              decoration: InputDecoration(
-                  border: InputBorder.none, hintText: 'Image to  be displayed'),
+              textCapitalization: TextCapitalization.words,
+              controller: _posCtrl,
+              decoration:
+                  InputDecoration(border: InputBorder.none, hintText: '0'),
               onChanged: (String text) {
                 setState(() {
-                  image = text;
+                  position = int.parse(_posCtrl.text);
                 });
               },
             ),
@@ -190,12 +186,10 @@ class _EntryDialogState extends State<EntryDialog> {
 
   Future<void> _addToDatabase() {
     return Firestore.instance.runTransaction((Transaction transaction) async {
-      CollectionReference reference = widget.ref;
-
       await reference.add({
         "name": name,
         "position": position,
-        "image": image
+        "content": content
       }).whenComplete(() {
         Toast.show('Node added successfully', context);
         Navigator.pop(context);
