@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/src/ui/utils/custompopupwidget.dart';
+import 'package:toast/toast.dart';
 import '../models/subjectdata.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/lessonsdata.dart';
@@ -28,11 +29,13 @@ class _ItemState extends State<Item> {
     CustomPopupMenu(title: 'Delete Module', icon: Icons.delete_forever),
   ];
   CollectionReference ref;
+  DocumentReference parentref;
 
   @override
   void initState() {
     super.initState();
     ref = widget.subject.reference.collection("submodules");
+    parentref = widget.subject.reference;
   }
 
   void _select(CustomPopupMenu choice) {
@@ -41,7 +44,10 @@ class _ItemState extends State<Item> {
       switch (_selectedChoice.title) {
         case 'Add New':
           addNew();
-        
+          break;
+        case 'Delete Module':
+          confirmDelete();
+          return 0;
       }
     });
   }
@@ -91,21 +97,76 @@ class _ItemState extends State<Item> {
     );
   }
 
-  Widget addNew() {
-    return IconButton(
-      tooltip: 'Add New',
-      icon: Icon(
-        Icons.add,
-        size: 21,
-      ),
-      onPressed: () {
-        print(ref.path);
-        showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (context) => EntryDialog(ref: ref));
-      },
+  void addNew() {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) => EntryDialog(ref: ref));
+  }
+
+  void confirmDelete() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            title: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Do you really want to delete this node?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    'This action is irreversible.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  )
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      'No, take me back',
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 10),
+                    child: MaterialButton(
+                    padding: EdgeInsets.all(0),
+                      color: Colors.blue,
+                      child: Text('Yes', style: TextStyle(color: Colors.white),),
+                      onPressed: () {
+                        deleteModule();
+                      },
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
     );
+  }
+
+  Future<void> deleteModule() {
+    return Firestore.instance.runTransaction((Transaction transaction) async {
+      DocumentReference reference = widget.subject.reference;
+
+      await reference.delete().whenComplete(() {
+        Toast.show('Deleted successfully', context);
+        Navigator.pop(context);
+      });
+    });
   }
 
   Widget _buildBody(BuildContext context) {

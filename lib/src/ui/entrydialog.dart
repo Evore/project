@@ -49,7 +49,7 @@ class _EntryDialogState extends State<EntryDialog> {
 
   dialogContent(BuildContext context) {
     return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
       child: Card(
         elevation: 6,
         shape: RoundedRectangleBorder(
@@ -58,6 +58,7 @@ class _EntryDialogState extends State<EntryDialog> {
           ),
         ),
         child: Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             leading: null,
             automaticallyImplyLeading: false,
@@ -65,7 +66,7 @@ class _EntryDialogState extends State<EntryDialog> {
               'Add a new Lesson',
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 15,
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
               ),
@@ -112,10 +113,10 @@ class _EntryDialogState extends State<EntryDialog> {
           SizedBox(height: 20),
           Text(
             'Title',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 5, 0, 15),
+            margin: EdgeInsets.fromLTRB(0, 3, 0, 15),
             decoration: decoration,
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: TextField(
@@ -133,40 +134,36 @@ class _EntryDialogState extends State<EntryDialog> {
               },
             ),
           ),
+          Text(
+            'Position',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+          ),
           Container(
-            padding: EdgeInsets.fromLTRB(0, 5, 0, 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  margin: EdgeInsets.fromLTRB(0, 5, 20, 15),
-                  decoration: decoration,
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    maxLines: 1,
-                    autocorrect: true,
-                    textCapitalization: TextCapitalization.words,
-                    controller: _posCtrl,
-                    decoration: InputDecoration(
-                        border: InputBorder.none, hintText: 'Order'),
-                    onChanged: (String text) {
-                      setState(() {
-                        position = int.parse(_posCtrl.text);
-                      });
-                    },
-                  ),
-                ),
-              ],
+            width: 100,
+            margin: EdgeInsets.fromLTRB(0, 3, 20, 15),
+            decoration: decoration,
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: TextField(
+              keyboardType: TextInputType.number,
+              maxLines: 1,
+              autocorrect: true,
+              textCapitalization: TextCapitalization.words,
+              controller: _posCtrl,
+              decoration:
+                  InputDecoration(border: InputBorder.none, hintText: '0'),
+              onChanged: (String text) {
+                setState(() {
+                  position = int.parse(_posCtrl.text);
+                });
+              },
             ),
           ),
           Text(
             'Image',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 5, 0, 10),
+            margin: EdgeInsets.fromLTRB(0, 3, 0, 10),
             decoration: decoration,
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: TextField(
