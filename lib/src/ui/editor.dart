@@ -15,6 +15,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
   TabController _controller;
   TextEditingController _titleCtrl, _contentCtrl, _posCtrl;
 
+  bool isloading = false;
   bool isDocumentNew = true;
   String title = '';
   String content = '';
@@ -47,7 +48,11 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
         iconTheme: IconThemeData(color: Colors.grey),
         backgroundColor: Colors.white,
         title: Text(
-          isDocumentNew ? 'Editor' : widget.existingData.name.isNotEmpty ? widget.existingData.name : 'Editor',
+          isDocumentNew
+              ? 'Editor'
+              : widget.existingData.name.isNotEmpty
+                  ? widget.existingData.name
+                  : 'Editor',
           style: TextStyle(color: Colors.black),
         ),
         actions: <Widget>[saveAction(), SizedBox(width: 10), deleteAction()],
@@ -94,7 +99,6 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
       icon: Icon(Icons.delete_outline),
       onPressed: () {
         print("Is this a new document? : $isDocumentNew");
-
 
         if (!isDocumentNew) _deleteData(widget.existingData.reference);
       },
@@ -199,7 +203,6 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
 
   Future<void> _addToDatabase(Content content) {
     return Firestore.instance.runTransaction((Transaction transaction) async {
-    
       await widget.reference.add({
         "name": content.name,
         "content": content.content,
@@ -230,8 +233,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
 
   Future<void> _deleteData(DocumentReference reference) {
     return Firestore.instance.runTransaction((Transaction transaction) async {
-      await transaction.delete(reference)
-      .whenComplete(() {
+      await transaction.delete(reference).whenComplete(() {
         Navigator.pop(context);
       });
     });

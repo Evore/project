@@ -127,7 +127,6 @@ class _SubjectWidgetState extends State<SubjectWidget> {
 //TODO: make a color theme
   Widget getRemoteData(BuildContext context) {
     DocumentReference ref = widget.reference;
-    // get actual snapshot from Cloud Firestore
     return StreamBuilder<QuerySnapshot>(
       stream: ref.collection("courses").snapshots(),
       builder: (context, snapshot) {
@@ -192,7 +191,6 @@ class _SubjectWidgetState extends State<SubjectWidget> {
         );
       },
       child: Column(
-        //TODO: use a stack layout and curve the top corners
         children: <Widget>[
           AspectRatio(
             //keeps the container in proportional width and height
@@ -204,7 +202,7 @@ class _SubjectWidgetState extends State<SubjectWidget> {
                 margin: EdgeInsets.all(14),
                 child: ClipOval(
                   child: CachedNetworkImage(
-                    imageUrl: data.imageName,
+                    imageUrl: data.image,
                     placeholder: (context, url) =>
                         new CircularProgressIndicator(),
                     errorWidget: (context, url, error) => new Icon(Icons.error),

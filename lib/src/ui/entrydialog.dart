@@ -4,20 +4,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 
-//For entry of new lessons
+//For entry of new modules or lessons
 
 class EntryDialog extends StatefulWidget {
-  EntryDialog({this.ref});
+  EntryDialog({this.ref, this.module});
   final CollectionReference ref;
+  final bool module;
   _EntryDialogState createState() => _EntryDialogState();
 }
 
 class _EntryDialogState extends State<EntryDialog> {
   TextEditingController _nameCtrl, _imageCtrl, _posCtrl;
 
+  bool isLoading = false;
   String name = '';
   String image = '';
   int position = 0;
+  bool module = false;
+  String docType = 'lesson';
 
   @override
   void initState() {
@@ -25,6 +29,10 @@ class _EntryDialogState extends State<EntryDialog> {
     _nameCtrl = TextEditingController();
     _posCtrl = TextEditingController();
     _imageCtrl = TextEditingController();
+    if (widget.module == true) {
+      module = true;
+      docType = 'module';
+    }
   }
 
   @override
@@ -63,7 +71,7 @@ class _EntryDialogState extends State<EntryDialog> {
             leading: null,
             automaticallyImplyLeading: false,
             title: Text(
-              'Add a new Lesson',
+              'Add a new $docType',
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 15,
@@ -83,19 +91,24 @@ class _EntryDialogState extends State<EntryDialog> {
   }
 
   Widget saveAction() {
-    return IconButton(
-      iconSize: 20,
-      color: Colors.white,
-      padding: const EdgeInsets.all(0),
-      icon: Icon(Icons.save),
-      onPressed: () {
-        if (name.isNotEmpty) {
-          _addToDatabase();
-        } else {
-          Toast.show('Kindly enter a lesson name', context);
-        }
-      },
-    );
+    return isLoading
+        ? CircularProgressIndicator()
+        : IconButton(
+            iconSize: 20,
+            color: Colors.white,
+            padding: const EdgeInsets.all(0),
+            icon: Icon(Icons.save),
+            onPressed: () {
+              if (name.isNotEmpty) {
+                setState(() {
+                  isLoading = true;
+                });
+                _addLessonToDatabase();
+              } else {
+                Toast.show('Kindly enter a $docType name', context);
+              }
+            },
+          );
   }
 
   BoxDecoration decoration = BoxDecoration(
@@ -126,7 +139,7 @@ class _EntryDialogState extends State<EntryDialog> {
               controller: _nameCtrl,
               decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'Enter the lesson title here'),
+                  hintText: 'Enter the $docType title here'),
               onChanged: (String text) {
                 setState(() {
                   name = text;
@@ -186,7 +199,7 @@ class _EntryDialogState extends State<EntryDialog> {
     );
   }
 
-  Future<void> _addToDatabase() {
+  Future<void> _addLessonToDatabase() {
     return Firestore.instance.runTransaction((Transaction transaction) async {
       CollectionReference reference = widget.ref;
 

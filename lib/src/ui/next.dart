@@ -189,7 +189,9 @@ class _ItemState extends State<Item> {
 
   Widget pageFrame(BuildContext context, List<DocumentSnapshot> snapshots) {
     return snapshots.isEmpty
-        ? Container()
+        ? Center(
+          child: Text('Nothing to see here yet. \n Feel to browse other collections in the meantime.', textAlign: TextAlign.center,),
+        )
         : ListView(
             padding: EdgeInsets.symmetric(vertical: 10),
             shrinkWrap: true,

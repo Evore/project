@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:project/src/ui/entrydialog.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 
 import 'next.dart';
@@ -15,14 +16,15 @@ class CustomDialog extends StatefulWidget {
 }
 
 class _CustomDialogState extends State<CustomDialog> {
+  CollectionReference modulesRef;
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 40),
       color: Colors.transparent,
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-        child: dialogContent(context)),
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: dialogContent(context)),
     );
   }
 
@@ -43,10 +45,26 @@ class _CustomDialogState extends State<CustomDialog> {
         ),
         floatingActionButton: FloatingActionButton(
           mini: true,
-          child: Icon(Icons.add, size: 15,),
-          onPressed: (){},
+          child: Icon(
+            Icons.add,
+            size: 15,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+            addModule(context);
+          },
         ),
       ),
+    );
+  }
+
+  void addModule(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => EntryDialog(
+            module: true,
+            ref: modulesRef,
+          ),
     );
   }
 
@@ -108,10 +126,10 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget buildChild(BuildContext context, Record record) {
-    DocumentReference ref = record.reference;
-    // get actual snapshot from Cloud Firestore
+    CollectionReference ref = record.reference.collection('modules');
+    modulesRef = ref;
     return StreamBuilder<QuerySnapshot>(
-      stream: ref.collection('modules').snapshots(),
+      stream: ref.snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
@@ -141,6 +159,7 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    //the modules
     final subject = SubjectData.fromSnapShot(data);
 
     if (subject.name == null) return Container();

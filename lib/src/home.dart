@@ -36,12 +36,12 @@ class _HomeState extends State<Home> {
   ];
 
   void _select(CustomPopupMenu choice) {
-    setState(() {
-      Navigator.push(context, 
-      MaterialPageRoute(
-        builder: (context)=>  LogoutPage()
-      ));
-    });
+    Navigator.pop(context);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LogoutPage(),
+        ));
   }
 
   @override
