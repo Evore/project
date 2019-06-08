@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:project/src/models/lessonsdata.dart';
 import 'package:project/src/ui/editor.dart';
+import 'package:project/src/ui/testeditor.dart';
 import 'package:toast/toast.dart';
 
 class AskTestDialog extends StatefulWidget {
@@ -13,12 +13,11 @@ class AskTestDialog extends StatefulWidget {
 }
 
 class _AskTestDialogState extends State<AskTestDialog> {
-  TextEditingController _nameCtrl, _contentCtrl, _posCtrl;
+  TextEditingController _nameCtrl, _posCtrl;
 
   CollectionReference reference;
 
   String name = '';
-  String content = '';
   int position = 0;
   bool test = false;
 
@@ -27,7 +26,6 @@ class _AskTestDialogState extends State<AskTestDialog> {
     super.initState();
     _nameCtrl = TextEditingController();
     _posCtrl = TextEditingController();
-    _contentCtrl = TextEditingController();
     reference = widget.ref.collection('content');
   }
 
@@ -88,7 +86,9 @@ class _AskTestDialogState extends State<AskTestDialog> {
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Editor()));
+                        MaterialPageRoute(builder: (context) => Editor(
+                          reference: reference,
+                        )));
                   },
                 ),
               )
@@ -127,12 +127,12 @@ class _AskTestDialogState extends State<AskTestDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Text(
-            'Only fill out these fields if you want to include a quiz. Otherwise, skip this page entirely.',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+            'Only fill out these fields if you want to include a quiz. Otherwise, skip this dialog entirely.',
+            style: TextStyle(color: Colors.grey[600], fontSize: 13.5, fontWeight: FontWeight.w400),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 25),
           Text(
             'Title',
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
@@ -189,10 +189,15 @@ class _AskTestDialogState extends State<AskTestDialog> {
       await reference.add({
         "name": name,
         "position": position,
-        "content": content
+        "content": '',
+        "test": true
       }).whenComplete(() {
         Toast.show('Node added successfully', context);
-        Navigator.pop(context);
+      }).then((newreference){
+        Navigator.push(context,
+         MaterialPageRoute(
+           builder: (context)=> TestEditor(newRef: newreference),
+         ));
       });
     });
   }

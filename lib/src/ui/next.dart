@@ -3,6 +3,7 @@ library home;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project/src/ui/utils/custompopupwidget.dart';
 import '../models/subjectdata.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/lessonsdata.dart';
@@ -21,14 +22,28 @@ class _ItemState extends State<Item> {
   bool open = false;
   bool editingState = false;
   String name = '';
-
+  CustomPopupMenu _selectedChoice;
+  List<CustomPopupMenu> choices = [
+    CustomPopupMenu(title: 'Add New', icon: Icons.add),
+    CustomPopupMenu(title: 'Delete Module', icon: Icons.delete_forever),
+  ];
   CollectionReference ref;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     ref = widget.subject.reference.collection("submodules");
+  }
+
+  void _select(CustomPopupMenu choice) {
+    _selectedChoice = choice;
+    setState(() {
+      switch (_selectedChoice.title) {
+        case 'Add New':
+          addNew();
+        
+      }
+    });
   }
 
   @override
@@ -42,7 +57,23 @@ class _ItemState extends State<Item> {
           'Learn',
           style: TextStyle(fontSize: 16),
         ),
-        actions: <Widget>[addNew()],
+        actions: <Widget>[
+          PopupMenuButton<CustomPopupMenu>(
+            icon: Icon(Icons.menu),
+            elevation: 4,
+            // initialValue: choices[0],
+            tooltip: 'Menu',
+            onSelected: _select,
+            itemBuilder: (BuildContext context) {
+              return choices.map((CustomPopupMenu choice) {
+                return PopupMenuItem<CustomPopupMenu>(
+                  value: choice,
+                  child: Text(choice.title),
+                );
+              }).toList();
+            },
+          )
+        ],
         backgroundColor: Colors.white,
         elevation: 1,
         leading: IconButton(

@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project/src/models/testmodel.dart';
 import 'package:project/src/ui/testsui.dart';
 import 'package:toast/toast.dart';
-import '../models/record.dart';
 
 class TestEditor extends StatefulWidget {
-  TestEditor({this.existingData});
+  TestEditor({this.existingData, this.newRef});
   final Tests existingData;
+  final DocumentReference newRef;
   _TestEditorState createState() => _TestEditorState();
 }
 
@@ -17,6 +17,7 @@ class _TestEditorState extends State<TestEditor>
   TextEditingController _questionCtrl, _contentCtrl, answerCtrl;
 
   bool isDocumentNew = true;
+  bool ischoicempty = true;
   String question = '';
   List<String> choices;
   String choice;
@@ -29,12 +30,14 @@ class _TestEditorState extends State<TestEditor>
     _questionCtrl = TextEditingController();
     _contentCtrl = TextEditingController();
     answerCtrl = TextEditingController();
+    choices = [];
     prepEdits();
   }
 
   void prepEdits() {
     if (widget.existingData != null) {
       isDocumentNew = false;
+      ischoicempty = true;
       _questionCtrl.text = widget.existingData.question;
       answerCtrl.text = widget.existingData.answer.toString();
       choices = widget.existingData.choices;
@@ -207,15 +210,17 @@ class _TestEditorState extends State<TestEditor>
         ),
         Container(
           constraints: BoxConstraints(
-            minHeight: 50,
+            minHeight: 0,
             // maxHeight: 500,
             maxWidth: 360,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: choices
-                .map((data) => choicesWidget(data, choices.indexOf(data)))
-                .toList(),
+            children: ischoicempty
+                ? [Container()]
+                : choices
+                    .map((data) => choicesWidget(data, choices.indexOf(data)))
+                    .toList(),
           ),
         ),
         addToChoices()
@@ -236,6 +241,8 @@ class _TestEditorState extends State<TestEditor>
               icon: Icon(Icons.delete),
               onPressed: () {
                 setState(() {
+                  if (choices.length == 1) ischoicempty = true;
+                  print('IS WORKING');
                   choices.removeAt(index - 1);
                 });
               })
@@ -272,6 +279,7 @@ class _TestEditorState extends State<TestEditor>
             onPressed: () {
               if (choice != null)
                 setState(() {
+                  ischoicempty = false;
                   choices.add(choice);
                   _contentCtrl.clear();
                 });
@@ -281,18 +289,16 @@ class _TestEditorState extends State<TestEditor>
   }
 
   Widget preview(BuildContext context) {
-    return ListView(padding: EdgeInsets.all(10), children: [TestSection(
-      test: Tests(question: _questionCtrl.text,
-                  choices: choices,
-                  answer: answer)
-    )]);
+    return ListView(padding: EdgeInsets.all(10), children: [
+      TestSection(
+          test: Tests(
+              question: _questionCtrl.text, choices: choices, answer: answer))
+    ]);
   }
 
   Future<void> _addToDatabase(Tests tests) {
     return Firestore.instance.runTransaction((Transaction transaction) async {
-      tests.reference.path;
-      CollectionReference reference =
-          widget.existingData.reference.collection('tests');
+      CollectionReference reference = widget.newRef.collection('tests');
 
       await reference.add({
         "question": tests.question,

@@ -18,7 +18,7 @@ class _CustomDialogState extends State<CustomDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 40),
       color: Colors.transparent,
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
@@ -41,21 +41,18 @@ class _CustomDialogState extends State<CustomDialog> {
           shrinkWrap: true, // To make the card compact
           children: <Widget>[getParent(context)],
         ),
+        floatingActionButton: FloatingActionButton(
+          mini: true,
+          child: Icon(Icons.add, size: 15,),
+          onPressed: (){},
+        ),
       ),
     );
   }
 
   Text buildTitle(String text) {
-    //TODO check overflow
-    String trunc(String text) {
-      if (text.length > 35) {
-        text = text.substring(0, 37) + '...';
-      }
-      return text;
-    }
-
     return Text(
-      trunc(text),
+      text,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
         fontSize: 16,

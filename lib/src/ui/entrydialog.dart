@@ -2,8 +2,9 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:project/src/models/lessonsdata.dart';
 import 'package:toast/toast.dart';
+
+//For entry of new lessons
 
 class EntryDialog extends StatefulWidget {
   EntryDialog({this.ref});

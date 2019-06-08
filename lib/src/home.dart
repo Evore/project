@@ -3,6 +3,7 @@ library home;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:project/src/ui/logout.dart';
 import 'package:project/src/ui/utils/custompopupwidget.dart';
 import 'ui/homewidgets.dart';
 
@@ -30,17 +31,16 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   CustomPopupMenu _selectedChoice;
 
-  initState() {
-    super.initState();
-  }
-
   List<CustomPopupMenu> choices = <CustomPopupMenu>[
     CustomPopupMenu(title: 'Logout', icon: Icons.person),
   ];
 
   void _select(CustomPopupMenu choice) {
     setState(() {
-      _selectedChoice = choice;
+      Navigator.push(context, 
+      MaterialPageRoute(
+        builder: (context)=>  LogoutPage()
+      ));
     });
   }
 
@@ -63,7 +63,7 @@ class _HomeState extends State<Home> {
             PopupMenuButton<CustomPopupMenu>(
               icon: Icon(Icons.menu),
               elevation: 4,
-              initialValue: choices[0],
+              // initialValue: choices[0],
               tooltip: 'Menu',
               onSelected: _select,
               itemBuilder: (BuildContext context) {

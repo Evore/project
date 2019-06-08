@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project/src/models/lessonsdata.dart';
 import '../models/content.dart';
-import '../models/record.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class Editor extends StatefulWidget {
-  Editor({this.data, this.existingData});
-  final Lesson data;
+  Editor({this.reference, this.existingData});
+  final CollectionReference reference;
   final Content existingData;
   _EditorState createState() => _EditorState();
 }
@@ -200,10 +199,8 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
 
   Future<void> _addToDatabase(Content content) {
     return Firestore.instance.runTransaction((Transaction transaction) async {
-      CollectionReference reference =
-          widget.data.reference.collection('content');
-
-      await reference.add({
+    
+      await widget.reference.add({
         "name": content.name,
         "content": content.content,
         "position": content.position,

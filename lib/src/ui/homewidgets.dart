@@ -30,7 +30,9 @@ class _SemesterWidgetState extends State<SemesterWidget> {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
             return new Center(
-              child: new CircularProgressIndicator(),
+              child: new CircularProgressIndicator(
+                backgroundColor: Colors.white,
+              ),
             );
           default:
             return buildList(context, snapshot.data.documents);
@@ -70,6 +72,7 @@ class _SemesterWidgetState extends State<SemesterWidget> {
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[900],
+              fontFamily: 'Raleway',
               fontWeight: FontWeight.w600,
             ),
           ),
