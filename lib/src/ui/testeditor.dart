@@ -37,7 +37,7 @@ class _TestEditorState extends State<TestEditor>
   void prepEdits() {
     if (widget.existingData != null) {
       isDocumentNew = false;
-      ischoicempty = true;
+      ischoicempty = false;
       _questionCtrl.text = widget.existingData.question;
       answerCtrl.text = widget.existingData.answer.toString();
       choices = widget.existingData.choices;

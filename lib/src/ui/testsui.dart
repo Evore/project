@@ -76,8 +76,9 @@ class SectionState extends State<TestSection> {
     return Card(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(2))),
-      margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: FlatButton(
+        padding: EdgeInsets.all(0),
         onPressed: () {
           Navigator.push(
               context,
@@ -89,16 +90,19 @@ class SectionState extends State<TestSection> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                width: 400,
-                padding: EdgeInsets.all(5),
+                
+                padding: EdgeInsets.only(left: 10),
                 child: Text(
                   widget.test.question,
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
+                  textAlign: TextAlign.left,
+                  style: TextStyle( fontWeight: FontWeight.w400, fontSize: 16),
                 ),
               ),
               Container(
+                padding: EdgeInsets.only(left: 10),
                 child: buildoptions(widget.test.choices),
               )
             ],
@@ -132,8 +136,8 @@ class SectionState extends State<TestSection> {
   }
 
   Widget rightOrWrong(bool isright) {
-    final right = Icon(Icons.check, size: 14, color: Colors.green);
-    final wrong = Icon(Icons.close, size: 14, color: Colors.red);
+    final right = Icon(Icons.check, size: 16, color: Colors.green);
+    final wrong = Icon(Icons.close, size: 16, color: Colors.red);
 
     return isSelected == null ? Container() : isright ? right : wrong;
   }

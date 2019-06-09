@@ -165,7 +165,7 @@ class _EntryDialogState extends State<EntryDialog> {
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 3, 0, 10),
+            margin: EdgeInsets.fromLTRB(0, 3, 0, 0),
             decoration: decoration,
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: TextField(

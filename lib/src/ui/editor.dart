@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project/src/models/lessonsdata.dart';
+import 'package:project/src/ui/tabsui.dart';
 import '../models/content.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
@@ -38,6 +39,11 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
       _posCtrl.text = widget.existingData.position.toString();
       _titleCtrl.text = widget.existingData.name;
       _contentCtrl.text = widget.existingData.content;
+      
+      position = widget.existingData.position;
+      title = widget.existingData.name;
+      content = widget.existingData.content;
+
     }
   }
 
@@ -118,10 +124,10 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
           SizedBox(height: 20),
           Text(
             'Title',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 5, 0, 15),
+            margin: EdgeInsets.fromLTRB(0, 2, 0, 15),
             decoration: decoration,
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: TextField(
@@ -138,14 +144,18 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
               },
             ),
           ),
+          Text(
+            'Position',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+          ),
           Container(
-            padding: EdgeInsets.fromLTRB(0, 5, 0, 15),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
                   width: 100,
-                  margin: EdgeInsets.fromLTRB(0, 5, 20, 15),
+                  margin: EdgeInsets.fromLTRB(0, 2, 20, 20),
                   decoration: decoration,
                   padding: EdgeInsets.symmetric(horizontal: 8),
                   child: TextField(
@@ -168,15 +178,15 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
           ),
           Text(
             'Content',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 5, 0, 10),
+            margin: EdgeInsets.fromLTRB(0, 2, 0, 10),
             decoration: decoration,
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: TextField(
               minLines: 2,
-              maxLines: 17,
+              maxLines: 25,
               autocorrect: true,
               textCapitalization: TextCapitalization.sentences,
               controller: _contentCtrl,
@@ -196,9 +206,13 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
   }
 
   Widget preview(BuildContext context) {
-    return ListView(padding: EdgeInsets.all(10), children: [
-      new MarkdownBody(data: '# $title \n$content'),
-    ]);
+    return TabContents(
+      content: Content(
+          content: _contentCtrl.text,
+          name: _titleCtrl.text,
+          position: int.parse(_posCtrl.text),
+          test: false),
+    );
   }
 
   Future<void> _addToDatabase(Content content) {
