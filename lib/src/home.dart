@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          title: Text('Project Name'),
+          title: Text('Study', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),),
           actions: <Widget>[
             PopupMenuButton<CustomPopupMenu>(
               icon: Icon(Icons.menu),

@@ -60,7 +60,7 @@ class _ItemState extends State<Item> {
         textTheme: TextTheme(title: TextStyle(color: Colors.grey[700])),
         centerTitle: true,
         title: Text(
-          'Learn',
+          widget.subject.name,
           style: TextStyle(fontSize: 16),
         ),
         actions: <Widget>[
@@ -264,10 +264,10 @@ class _ItemState extends State<Item> {
               height: 55,
               width: 55,
               child: ClipOval(
-                child: lesson.image.isNotEmpty
+                child: widget.subject.image.isNotEmpty
                     ? CachedNetworkImage(
                         fit: BoxFit.fill,
-                        imageUrl: lesson.image,
+                        imageUrl: widget.subject.image,
                         placeholder: (context, url) =>
                             new CircularProgressIndicator(),
                         errorWidget: (context, url, error) =>

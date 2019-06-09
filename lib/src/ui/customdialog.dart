@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class CustomDialog extends StatefulWidget {
 
 class _CustomDialogState extends State<CustomDialog> {
   CollectionReference modulesRef;
+  String imageUrl = '';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,10 +42,7 @@ class _CustomDialogState extends State<CustomDialog> {
             leading: null,
             automaticallyImplyLeading: false,
             title: buildTitle(widget.subject.name)),
-        body: ListView(
-          shrinkWrap: true, // To make the card compact
-          children: <Widget>[getParent(context)],
-        ),
+        body: getParent(context),
         floatingActionButton: FloatingActionButton(
           mini: true,
           child: Icon(
@@ -106,22 +105,12 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget buildList(BuildContext context, List<dynamic> snapshot) {
-    return Container(
-      padding: EdgeInsets.only(bottom: 10, top: 0),
-      child: ListView(
-        shrinkWrap: true,
-        children: snapshot
-            .map(
-              (data) => getChildNode(data),
-            )
-            .toList(),
-      ),
-    );
+    DocumentSnapshot snap = snapshot[0];
+    return getChildNode(snap);
   }
 
   Widget getChildNode(DocumentSnapshot data) {
     final record = Record.fromSnapshot(data);
-
     if (record.name == null) return Container();
     return buildChild(context, record);
   }
@@ -130,7 +119,7 @@ class _CustomDialogState extends State<CustomDialog> {
     CollectionReference ref = record.reference.collection('modules');
     modulesRef = ref;
     return StreamBuilder<QuerySnapshot>(
-      stream: ref.snapshots(),
+      stream: ref.orderBy('position').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
@@ -146,16 +135,14 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget buildCList(BuildContext context, List<dynamic> snapshot) {
-    return Container(
-      padding: EdgeInsets.only(bottom: 10, top: 0),
-      child: ListView(
-        shrinkWrap: true,
-        children: snapshot
-            .map(
-              (data) => _buildListItem(context, data),
-            )
-            .toList(),
-      ),
+    return ListView(
+      padding: EdgeInsets.only(bottom: 20, top: 0),
+      shrinkWrap: true,
+      children: snapshot
+          .map(
+            (data) => _buildListItem(context, data),
+          )
+          .toList(),
     );
   }
 
@@ -168,23 +155,39 @@ class _CustomDialogState extends State<CustomDialog> {
   }
 
   Widget subjectInfo(BuildContext context, SubjectData data) {
-    return FlatButton(
-      child: Text(data.name),
-      onPressed: () {
-        // FirebaseAuth _auth = FirebaseAuth.instance;
-        // _auth.currentUser().then((user) {
-        //   print(user.uid);
-        // });
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Item(
-                  subject: data,
-                ),
+    if (data.image.isNotEmpty) {
+      imageUrl = data.image;
+    }
+    return Container(
+      child: FlatButton(
+        child: Column(children: [
+          Card(
+            shape: CircleBorder(),
+            elevation: 6,
+            color: Colors.white,
+            margin: EdgeInsets.fromLTRB(85, 40, 85, 20),
+            child: ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                placeholder: (context, url) => new CircularProgressIndicator(),
+                errorWidget: (context, url, error) => new Icon(Icons.error),
+              ),
+            ),
           ),
-        );
-      },
+          Text(data.name, textAlign: TextAlign.center, style: TextStyle(fontSize: 15),)
+        ]),
+        onPressed: () {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Item(
+                    subject: data,
+                  ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

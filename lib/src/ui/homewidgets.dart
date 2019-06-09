@@ -13,6 +13,8 @@ class SemesterWidget extends StatefulWidget {
 }
 
 class _SemesterWidgetState extends State<SemesterWidget> {
+
+
   @override
   Widget build(BuildContext context) {
     return getRemoteData(context);
@@ -23,7 +25,7 @@ class _SemesterWidgetState extends State<SemesterWidget> {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
           .collection("courses/BIT/level")
-          .where("abs-level", isLessThan: 3)
+          .where("abs-level", isLessThan: 4)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('${snapshot.error}');
@@ -45,7 +47,7 @@ class _SemesterWidgetState extends State<SemesterWidget> {
     return Container(
       child: ListView(
         scrollDirection: Axis.vertical,
-        padding: EdgeInsets.only(top: 10),
+        padding: EdgeInsets.only(top: 0),
         children: snapshot
             .map(
               (data) => _buildListItem(context, data),
@@ -124,11 +126,10 @@ class _SubjectWidgetState extends State<SubjectWidget> {
     return getRemoteData(context);
   }
 
-//TODO: make a color theme
   Widget getRemoteData(BuildContext context) {
     DocumentReference ref = widget.reference;
     return StreamBuilder<QuerySnapshot>(
-      stream: ref.collection("courses").snapshots(),
+      stream: ref.collection("courses").orderBy('courseId').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('${snapshot.error}');
         switch (snapshot.connectionState) {
