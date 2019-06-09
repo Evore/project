@@ -17,12 +17,7 @@ class MyApp extends StatelessWidget {
         home: MyHomePage(title: 'Home'),
         // Start the app with the "/" named route. In our case, the app will start
         // on the FirstScreen Widget
-        initialRoute: '/',
-        routes: {
-          // When we navigate to the "/" route, build the FirstScreen Widget
-          '/': (context) => MyHomePage(),
-          // When we navigate to the "/second" route, build the SecondScreen Widget
-        });
+        initialRoute: '/');
   }
 }
 

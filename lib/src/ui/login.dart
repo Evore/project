@@ -3,6 +3,8 @@ library login;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project/src/models/userinfo.dart';
+import 'package:toast/toast.dart';
 import 'dart:async';
 import 'dart:io';
 import '../home.dart';
@@ -20,6 +22,14 @@ class _LoginPageState extends State<LoginPage> {
 
   String email, password;
   bool isloading = false;
+
+  UserDetails finalDetails;
+  User user;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future<bool> sendVerification(FirebaseUser user) async {
     //might not need to use this method, but for posterity...
@@ -40,13 +50,32 @@ class _LoginPageState extends State<LoginPage> {
     return result;
   }
 
-  void getUserData(){
-    Future<QuerySnapshot>  aa = Firestore.instance.collection('users').where('email', isEqualTo: email).getDocuments();
+  Future<void> getUserData() async {
+    Stream<QuerySnapshot> aa = Firestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .snapshots();
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: aa,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return new Text('${snapshot.error}');
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return new Center(
+              child: new CircularProgressIndicator(),
+            );
+          default:
+            return getData(context, snapshot.data.documents.single);
+        }
+      },
+    );
   }
 
-  @override
-  void initState() {
-    super.initState();
+  getData(BuildContext context, DocumentSnapshot snapshot) {
+    user = User.fromSnapshot(snapshot);
+    UserDetails.user = user;
+    print(user.email);
   }
 
   Widget logo(BuildContext context) {
@@ -56,9 +85,6 @@ class _LoginPageState extends State<LoginPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          // Image.asset('assets/diamond.png', color: Colors.white10,
-          //     colorBlendMode: BlendMode.saturation,
-          //     height: 70),
           SizedBox(height: 16.0),
           Container(
             child: Text(
@@ -129,9 +155,9 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.grey[900],
                 elevation: 4,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(40))),
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
                 child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 70),
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
                     child: Text('Next',
                         style: TextStyle(
                             color: Colors.grey[200],
@@ -142,6 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                     setState(() {
                       isloading = true;
                     });
+                    getUserData();
                     _auth
                         .signInWithEmailAndPassword(
                             email: _usernameController.text,
@@ -163,10 +190,18 @@ class _LoginPageState extends State<LoginPage> {
                       isloading = false;
                     });
                     print("THE ERROR IS: " + error.toString());
+                    Toast.show(error.toString(), context);
                   }
                 }),
         SizedBox(height: 10),
-        FlatButton(child: Text('Forgot password?'), onPressed: () {})
+        FlatButton(
+            child: Text('Forgot password?'),
+            onPressed: () {
+              _usernameController.text.isNotEmpty
+                  ? _auth.sendPasswordResetEmail(
+                      email: _usernameController.text)
+                  : Toast.show('Kindly enter you email first', context);
+            })
       ],
     );
   }

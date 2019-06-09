@@ -36,7 +36,6 @@ class _HomeState extends State<Home> {
   ];
 
   void _select(CustomPopupMenu choice) {
-    Navigator.pop(context);
     Navigator.push(
         context,
         MaterialPageRoute(

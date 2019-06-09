@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project/src/ui/entrydialog.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
@@ -170,6 +171,11 @@ class _CustomDialogState extends State<CustomDialog> {
     return FlatButton(
       child: Text(data.name),
       onPressed: () {
+        // FirebaseAuth _auth = FirebaseAuth.instance;
+        // _auth.currentUser().then((user) {
+        //   print(user.uid);
+        // });
+        Navigator.pop(context);
         Navigator.push(
           context,
           MaterialPageRoute(

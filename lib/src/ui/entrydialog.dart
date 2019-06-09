@@ -37,62 +37,54 @@ class _EntryDialogState extends State<EntryDialog> {
 
   @override
   Widget build(BuildContext context) {
-    double hPadding = 20;
-    double vPadding = 100;
+    double hPadding = 15;
+    double vPadding = 70;
 
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       hPadding = 20;
       vPadding = 20;
-    } else {
-      hPadding = 20;
-      vPadding = 100;
     }
 
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: hPadding, vertical: vPadding),
-      color: Colors.transparent,
-      child: dialogContent(context),
+    return Container(padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: vPadding),
+      child: dialogContent(context)
     );
   }
 
   dialogContent(BuildContext context) {
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-      child: Card(
-        elevation: 6,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(3),
-          ),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            leading: null,
-            automaticallyImplyLeading: false,
-            title: Text(
-              'Add a new $docType',
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            actions: <Widget>[saveAction()],
-          ),
-          body: ListView(
-            shrinkWrap: true, // To make the card compact
-            children: <Widget>[entries()],
-          ),
+    return Card(
+      elevation: 6,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(3),
         ),
       ),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          leading: null,
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Add a new $docType',
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actions: <Widget>[saveAction()],
+        ),
+        body: entries(),
+        ),
     );
   }
 
   Widget saveAction() {
     return isLoading
-        ? CircularProgressIndicator()
+        ? CircularProgressIndicator(
+          backgroundColor: Colors.white,
+        )
         : IconButton(
             iconSize: 20,
             color: Colors.white,
@@ -116,13 +108,10 @@ class _EntryDialogState extends State<EntryDialog> {
       border: Border.all(color: Colors.grey[200], width: 1),
       borderRadius: BorderRadius.circular(2));
 
-  Widget entries() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+  Widget entries(){
+    return ListView(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      children: [
           SizedBox(height: 20),
           Text(
             'Title',
@@ -152,8 +141,8 @@ class _EntryDialogState extends State<EntryDialog> {
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
           Container(
-            width: 100,
-            margin: EdgeInsets.fromLTRB(0, 3, 20, 15),
+            // width: 100,
+            margin: EdgeInsets.fromLTRB(0, 3, 0, 15),
             decoration: decoration,
             padding: EdgeInsets.symmetric(horizontal: 8),
             child: TextField(
@@ -194,9 +183,7 @@ class _EntryDialogState extends State<EntryDialog> {
               },
             ),
           ),
-        ],
-      ),
-    );
+        ]);
   }
 
   Future<void> _addLessonToDatabase() {

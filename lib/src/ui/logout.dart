@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:project/main.dart';
 
 class LogoutPage extends StatelessWidget {
   @override
@@ -17,7 +16,7 @@ class LogoutPage extends StatelessWidget {
             FirebaseAuth auth = FirebaseAuth.instance;
             auth.signOut();
             Navigator.of(context).pushNamedAndRemoveUntil(
-                '/', (Route<dynamic> route) => false);
+                '/', (Route<dynamic> route) => true);
           },
         ),
       ),
